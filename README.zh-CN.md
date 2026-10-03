@@ -4,7 +4,17 @@
 
 一个 Chrome 扩展，提供桌面级表盘时钟，支持多种表盘风格、公历与农历双日期显示，以及实时天气。
 
-当前版本：**1.2.0**
+当前版本：**1.2.1**
+
+## 界面截图
+
+| 经典 | 霓虹 | 海洋 |
+| :---: | :---: | :---: |
+| ![经典表盘](docs/screenshots/clock-classic.png) | ![霓虹表盘](docs/screenshots/clock-neon.png) | ![海洋表盘](docs/screenshots/clock-ocean.png) |
+
+| 浅色模式 | 世界时钟 |
+| :---: | :---: |
+| ![浅色模式](docs/screenshots/clock-light.png) | ![世界时钟](docs/screenshots/world.png) |
 
 ## 功能特性
 
@@ -100,6 +110,9 @@
 ├── styles.css          # 主题、表盘风格、响应式布局
 ├── options.html        # 快捷键选项页结构
 ├── options.js          # 快捷键命令更新
+├── docs/
+│   ├── screenshots/    # 弹窗截图（420x420）
+│   └── store/          # Chrome 应用商店素材（1280x800）
 ├── README.md           # 文档（英文）
 └── README.zh-CN.md     # 文档（简体中文）
 ```

@@ -4,7 +4,17 @@ English | [简体中文](README.zh-CN.md)
 
 A Chrome extension that renders a desktop analog clock with multiple dial styles, dual date display, and live weather.
 
-Current version: **1.2.0**
+Current version: **1.2.1**
+
+## Screenshots
+
+| Classic | Neon | Ocean |
+| :---: | :---: | :---: |
+| ![Classic dial](docs/screenshots/clock-classic.png) | ![Neon dial](docs/screenshots/clock-neon.png) | ![Ocean dial](docs/screenshots/clock-ocean.png) |
+
+| Light mode | World clock |
+| :---: | :---: |
+| ![Light mode](docs/screenshots/clock-light.png) | ![World clock](docs/screenshots/world.png) |
 
 ## Features
 
@@ -100,6 +110,9 @@ Available after publishing.
 ├── styles.css          # Theming, dial styles, responsive layout
 ├── options.html        # Shortcut options page markup
 ├── options.js          # Shortcut command updates
+├── docs/
+│   ├── screenshots/    # Popup screenshots (420x420)
+│   └── store/          # Chrome Web Store assets (1280x800)
 └── README.md           # Documentation (English)
 ```
 
