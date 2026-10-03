@@ -100,6 +100,8 @@
 - Host 权限 `https://api.open-meteo.com/*`：用于天气请求
 - 位置信息仅发送给 Open-Meteo 用于获取天气，不收集其他数据
 
+完整说明：[隐私政策](docs/privacy-policy.zh-CN.md)
+
 ## 项目结构
 
 ```
@@ -111,8 +113,10 @@
 ├── options.html        # 快捷键选项页结构
 ├── options.js          # 快捷键命令更新
 ├── docs/
-│   ├── screenshots/    # 弹窗截图（420x420）
-│   └── store/          # Chrome 应用商店素材（1280x800）
+│   ├── privacy-policy.md       # 隐私政策（英文）
+│   ├── privacy-policy.zh-CN.md # 隐私政策（简体中文）
+│   ├── screenshots/            # 弹窗截图（420x420）
+│   └── store/                  # Chrome 应用商店素材（1280x800）
 ├── README.md           # 文档（英文）
 └── README.zh-CN.md     # 文档（简体中文）
 ```

@@ -100,6 +100,8 @@ Available after publishing.
 - Host permission `https://api.open-meteo.com/*`: weather requests
 - Location is sent only to Open-Meteo to fetch weather; no other data is collected
 
+Full policy: [Privacy Policy](docs/privacy-policy.md)
+
 ## Project Structure
 
 ```
@@ -111,8 +113,10 @@ Available after publishing.
 ├── options.html        # Shortcut options page markup
 ├── options.js          # Shortcut command updates
 ├── docs/
-│   ├── screenshots/    # Popup screenshots (420x420)
-│   └── store/          # Chrome Web Store assets (1280x800)
+│   ├── privacy-policy.md       # Privacy policy (English)
+│   ├── privacy-policy.zh-CN.md # Privacy policy (Simplified Chinese)
+│   ├── screenshots/            # Popup screenshots (420x420)
+│   └── store/                  # Chrome Web Store assets (1280x800)
 └── README.md           # Documentation (English)
 ```
 
