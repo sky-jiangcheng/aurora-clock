@@ -1,115 +1,134 @@
 # aurora-clock
 
-A Chrome extension that simulates a desktop analog clock with multiple dial styles, date display, and live weather.
+English | [简体中文](README.zh-CN.md)
+
+A Chrome extension that renders a desktop analog clock with multiple dial styles, dual date display, and live weather.
+
+Current version: **1.1.0**
 
 ## Features
 
-- 🎨 **Multiple Dial Styles**: Classic, Modern, Minimalist, and Vintage styles available
-- ⏰ **Real-time Clock Display**: Accurate analog clock with smooth hand animations
-- 📅 **Dual Date Display**: Shows both Gregorian and Lunar dates simultaneously
-- 🌤️ **Live Weather**: Current conditions from Open-Meteo using the browser location
-- ⌨️ **Keyboard Shortcuts**: 
-  - Default open shortcut: `Ctrl+Shift+O` (Windows/Linux) or `Command+Shift+O` (Mac)
-  - Close popup shortcut: `Escape` (built-in feature)
-  - Supports custom shortcut settings
-- 📱 **Responsive Design**: Adapts to different plugin window sizes
-- 🍎 **Apple-style UI**: Modern design with rounded corners, shadows, and gradients
+- Multiple dial styles: Classic, Modern, Minimalist, and Vintage
+- Analog clock with smoothly animated hands
+- Dual date display: Gregorian and Lunar (1900-2049)
+- Live weather from Open-Meteo using the browser location
+- Keyboard shortcuts: open the popup with `Ctrl+Shift+O` (Windows/Linux) or `Command+Shift+O` (Mac), close it with `Escape`
+- Custom shortcut management through `chrome.commands`
+- Dark / light mode toggle
+- Refined metal rim and dial bezel styling
+- Responsive layout for different popup sizes
 
 ## Tech Stack
 
-- **HTML5**: Plugin structure and layout
-- **CSS3**: Styling including multiple dial styles and responsive design
-- **JavaScript**: Clock logic, date calculation, and interaction features
-- **Chrome Extension API**: Browser extension development
+- HTML5
+- CSS3 (dial styles, theming, responsive layout)
+- JavaScript (clock logic, date conversion, weather fetch)
+- Chrome Extension API (Manifest V3)
 
 ## Installation
 
 ### Install from Chrome Web Store
 
-(Available after publishing to Chrome Web Store)
+Available after publishing.
 
 ### Local Development Installation
 
-1. Clone or download this project to your local machine
-2. Open Chrome browser and navigate to `chrome://extensions/`
+1. Clone or download this project
+2. Open Chrome and go to `chrome://extensions/`
 3. Enable "Developer mode" in the upper right corner
 4. Click "Load unpacked"
 5. Select the project folder
-6. The plugin is successfully installed and will display a clock icon in the browser's upper right corner
+6. The extension is installed and shows a clock icon in the toolbar
 
 ## Usage
 
 ### Open the Clock
 
-- Click the clock icon in the browser's upper right corner
-- Or use the shortcut `Ctrl+Shift+O` (Windows) / `Command+Shift+O` (Mac)
+- Click the clock icon in the toolbar
+- Or use `Ctrl+Shift+O` (Windows/Linux) / `Command+Shift+O` (Mac)
 
 ### Switch Dial Styles
 
-- Click the four style dots at the top of the plugin window
+- Click the four style dots at the top left
 - From left to right: Classic, Modern, Minimalist, Vintage
-- Style changes take effect immediately and are saved for the next open
+- Changes apply immediately and are saved for the next open
 
 ### View Date and Time
 
-- Analog clock displayed on the left
-- Gregorian date, Lunar date, and digital clock displayed on the right
-- Open the Weather tab for live temperature, humidity, wind, and related fields
+- Analog clock on the left
+- Gregorian date, Lunar date, and digital clock on the right
+
+### Check the Weather
+
+- Open the Weather tab
+- On first use, Chrome asks for location permission; allow it to load local weather
+- If location is denied, the last cached result is shown
+
+### Customize the Shortcut
+
+- Open the extension options page
+- Click "Set Shortcut", then press a combination with Ctrl, Command, or Alt
+- Press Escape to cancel
+
+## Permissions and Privacy
+
+- `storage`: saves theme, dial style, and the last weather result
+- `geolocation`: used only to request your coordinates for weather
+- Host permission `https://api.open-meteo.com/*`: weather requests
+- Location is sent only to Open-Meteo to fetch weather; no other data is collected
 
 ## Project Structure
 
 ```
-├── icons/              # Plugin icons
-├── manifest.json      # Plugin configuration file
-├── popup.html         # Plugin popup window page
-├── popup.js           # Plugin core logic
-├── styles.css         # Plugin styles
-├── options.html       # Shortcut options page
-├── options.js         # Shortcut command updates
-└── README.md          # Project documentation
+├── icons/              # Extension icons
+├── manifest.json       # Extension configuration (Manifest V3)
+├── popup.html          # Popup markup
+├── popup.js            # Clock, date, weather, and UI logic
+├── styles.css          # Theming, dial styles, responsive layout
+├── options.html        # Shortcut options page markup
+├── options.js          # Shortcut command updates
+└── README.md           # Documentation (English)
 ```
 
-## Main Function Implementation
+## Implementation Notes
 
-### Clock Logic
+### Clock
 
-- Uses `Date` object to get current time
-- Rotates clock hands with CSS transforms
-- Uses requestAnimationFrame so the second hand moves smoothly
+- Reads time from the `Date` object
+- Rotates hands with CSS transforms
+- Uses `requestAnimationFrame` so the second hand moves smoothly
 
-### Date Calculation
+### Date
 
-- Formats Gregorian date using `toLocaleDateString`
-- Converts Gregorian dates to lunar dates for 1900-2049
-- Updates the date display every minute
+- Formats the Gregorian date with `toLocaleDateString`
+- Converts Gregorian dates to lunar dates for 1900-2049 using a compact year table
+- Refreshes the date display every minute
 
-### Weather Information
+### Weather
 
-- Uses the Open-Meteo forecast API (no API key)
-- Reads location from the browser geolocation API
-- Caches the last successful result for the next open
+- Calls the Open-Meteo forecast API (no API key required)
+- Gets coordinates from the browser geolocation API
+- Caches the last successful result and reuses it when location is unavailable
 
-### Style Switching
+### Theming
 
-- Switches between different styles using CSS class names
-- Four styles: Classic, Modern, Minimalist, Vintage
-- Click the style dots at the top to switch
-- Selected style is stored in chrome.storage.sync
+- Toggles dark/light via a `body.light` class, stored in `chrome.storage.sync`
+- Switches dial styles by class names and stores the choice
 
 ## Browser Support
 
-- Chrome 88+ (supports Manifest V3)
-- Edge 88+ (Chromium-based)
+- Chrome 88+ (Manifest V3)
+- Edge 88+
 - Other Chromium-based browsers
 
-## Development Plan
+## Roadmap
 
 - [x] Live weather from Open-Meteo
 - [x] Options page for shortcut customization
-- [ ] Add more dial styles
-- [ ] Support 24-hour/12-hour format switching
-- [ ] Add world clock functionality
 - [x] Dark / light mode toggle
+- [ ] More dial styles
+- [ ] 24-hour / 12-hour format switching
+- [ ] World clock
 
 ## License
 
@@ -117,13 +136,9 @@ MIT License
 
 ## Contributing
 
-Issues and Pull Requests are welcome!
+Issues and Pull Requests are welcome.
 
 ## Author
 
 - Project URL: [https://github.com/sky-jiangcheng/aurora-clock](https://github.com/sky-jiangcheng/aurora-clock)
 - Contact: jiangcheng1806@gmail.com
-
----
-
-**Enjoy using Aurora Clock.**
