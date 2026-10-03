@@ -14,14 +14,18 @@
         <div class="style-dot" data-style="modern"></div>
         <div class="style-dot" data-style="minimal"></div>
         <div class="style-dot" data-style="vintage"></div>
+        <div class="style-dot" data-style="neon"></div>
+        <div class="style-dot" data-style="ocean"></div>
       </div>
       <div class="header-right">
+        <button class="format-toggle" id="formatToggle" title="Toggle 12/24-hour format">24H</button>
         <button class="mode-toggle" id="modeToggle" title="Toggle dark/light mode">
           <span class="mode-icon-dark"></span>
           <span class="mode-icon-light"></span>
         </button>
         <div class="tab-switch">
           <button class="tab-btn active" data-tab="clock">Clock</button>
+          <button class="tab-btn" data-tab="world">World</button>
           <button class="tab-btn" data-tab="weather">Weather</button>
         </div>
       </div>
@@ -50,6 +54,12 @@
           <div class="lunar-date" id="lunarDate"></div>
           <div class="current-time" id="currentTime"></div>
         </div>
+      </div>
+    </div>
+
+    <div class="tab-view" id="tab-world">
+      <div class="world-page">
+        <div class="world-list" id="worldList"></div>
       </div>
     </div>
 

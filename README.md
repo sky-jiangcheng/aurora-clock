@@ -8,9 +8,11 @@ Current version: **1.1.0**
 
 ## Features
 
-- Multiple dial styles: Classic, Modern, Minimalist, and Vintage
+- Multiple dial styles: Classic, Modern, Minimalist, Vintage, Neon, and Ocean
 - Analog clock with smoothly animated hands
 - Dual date display: Gregorian and Lunar (1900-2049)
+- Switch between 12-hour and 24-hour time formats
+- World clock showing the local time and major cities
 - Live weather from Open-Meteo using the browser location
 - Keyboard shortcuts: open the popup with `Ctrl+Shift+O` (Windows/Linux) or `Command+Shift+O` (Mac), close it with `Escape`
 - Custom shortcut management through `chrome.commands`
@@ -49,14 +51,25 @@ Available after publishing.
 
 ### Switch Dial Styles
 
-- Click the four style dots at the top left
-- From left to right: Classic, Modern, Minimalist, Vintage
+- Click the six style dots at the top left
+- From left to right: Classic, Modern, Minimalist, Vintage, Neon, Ocean
 - Changes apply immediately and are saved for the next open
 
 ### View Date and Time
 
 - Analog clock on the left
 - Gregorian date, Lunar date, and digital clock on the right
+
+### Switch Time Format
+
+- Click the format button in the header to toggle between `24H` and `12H`
+- The setting applies to the digital clock and the world clock, and is saved for the next open
+
+### View the World Clock
+
+- Open the World tab
+- Each row shows a city and its current local time
+- A `+1d` or `-1d` marker indicates the city is on a different calendar day than your location
 
 ### Check the Weather
 
@@ -110,6 +123,12 @@ Available after publishing.
 - Gets coordinates from the browser geolocation API
 - Caches the last successful result and reuses it when location is unavailable
 
+### World Clock
+
+- Renders one row per city with the `Intl.DateTimeFormat` API and IANA time zones
+- Compares each city's calendar day with the local day to show a `+1d` / `-1d` marker
+- Follows the current 12/24-hour format setting
+
 ### Theming
 
 - Toggles dark/light via a `body.light` class, stored in `chrome.storage.sync`
@@ -126,9 +145,9 @@ Available after publishing.
 - [x] Live weather from Open-Meteo
 - [x] Options page for shortcut customization
 - [x] Dark / light mode toggle
-- [ ] More dial styles
-- [ ] 24-hour / 12-hour format switching
-- [ ] World clock
+- [x] More dial styles
+- [x] 24-hour / 12-hour format switching
+- [x] World clock
 
 ## License
 

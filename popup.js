@@ -195,15 +195,155 @@ function updateDate() {
   if (lunarDateEl) lunarDateEl.textContent = lunarDate;
 }
 
+// ---- 12/24-hour format ----
+var use24Hour = true;
+
+function formatClockTime(date) {
+  var hours = date.getHours();
+  var minutes = String(date.getMinutes()).padStart(2, '0');
+  var seconds = String(date.getSeconds()).padStart(2, '0');
+
+  if (use24Hour) {
+    return String(hours).padStart(2, '0') + ':' + minutes + ':' + seconds;
+  }
+
+  var suffix = hours >= 12 ? 'PM' : 'AM';
+  var hour12 = hours % 12 || 12;
+  return hour12 + ':' + minutes + ':' + seconds + ' ' + suffix;
+}
+
 function updateCurrentTime() {
   if (!currentTimeEl) return;
+  currentTimeEl.textContent = formatClockTime(new Date());
+}
+
+function updateFormatToggleLabel() {
+  var toggle = document.getElementById('formatToggle');
+  if (toggle) toggle.textContent = use24Hour ? '24H' : '12H';
+}
+
+function setupFormatToggle() {
+  var toggle = document.getElementById('formatToggle');
+
+  if (toggle) {
+    toggle.addEventListener('click', function() {
+      use24Hour = !use24Hour;
+      updateFormatToggleLabel();
+      if (typeof chrome !== 'undefined' && chrome.storage) {
+        chrome.storage.sync.set({ use24Hour: use24Hour });
+      }
+      updateCurrentTime();
+      updateWorldClock();
+    });
+  }
+
+  updateFormatToggleLabel();
+
+  if (typeof chrome !== 'undefined' && chrome.storage) {
+    chrome.storage.sync.get(['use24Hour'], function(result) {
+      if (typeof result.use24Hour === 'boolean') {
+        use24Hour = result.use24Hour;
+      }
+      updateFormatToggleLabel();
+      updateCurrentTime();
+      updateWorldClock();
+    });
+  }
+}
+
+// ---- World clock ----
+var WORLD_CITIES = [
+  { name: 'Local', tz: null },
+  { name: 'London', tz: 'Europe/London' },
+  { name: 'New York', tz: 'America/New_York' },
+  { name: 'Dubai', tz: 'Asia/Dubai' },
+  { name: 'Tokyo', tz: 'Asia/Tokyo' },
+  { name: 'Sydney', tz: 'Australia/Sydney' }
+];
+
+var worldRows = [];
+var worldTimeFormatters = {};
+var worldDayFormatters = {};
+
+function getWorldTimeFormatter(tz) {
+  var key = (tz || 'local') + '|' + (use24Hour ? '24' : '12');
+  if (!worldTimeFormatters[key]) {
+    var options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    if (use24Hour) {
+      options.hourCycle = 'h23';
+    } else {
+      options.hour12 = true;
+    }
+    if (tz) options.timeZone = tz;
+    worldTimeFormatters[key] = new Intl.DateTimeFormat('en-US', options);
+  }
+  return worldTimeFormatters[key];
+}
+
+function getWorldDayFormatter(tz) {
+  var key = tz || 'local';
+  if (!worldDayFormatters[key]) {
+    var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    if (tz) options.timeZone = tz;
+    worldDayFormatters[key] = new Intl.DateTimeFormat('en-CA', options);
+  }
+  return worldDayFormatters[key];
+}
+
+// Day difference between the target zone and the local zone (-1, 0 or +1)
+function worldDayOffset(tz, date) {
+  var localKey = getWorldDayFormatter(null).format(date);
+  var cityKey = getWorldDayFormatter(tz).format(date);
+  if (cityKey === localKey) return 0;
+  return Math.round((Date.parse(cityKey) - Date.parse(localKey)) / 86400000);
+}
+
+function buildWorldClock() {
+  var list = document.getElementById('worldList');
+  if (!list) return;
+
+  list.innerHTML = '';
+  worldRows = [];
+
+  WORLD_CITIES.forEach(function(city) {
+    var row = document.createElement('div');
+    row.className = 'world-row';
+
+    var nameEl = document.createElement('span');
+    nameEl.className = 'world-city';
+    nameEl.textContent = city.name;
+
+    var dayEl = document.createElement('span');
+    dayEl.className = 'world-day';
+
+    var timeEl = document.createElement('span');
+    timeEl.className = 'world-time';
+
+    row.appendChild(nameEl);
+    row.appendChild(dayEl);
+    row.appendChild(timeEl);
+    list.appendChild(row);
+
+    worldRows.push({ tz: city.tz, timeEl: timeEl, dayEl: dayEl });
+  });
+}
+
+function updateWorldClock() {
+  if (!worldRows.length) return;
 
   var now = new Date();
-  var hours = String(now.getHours()).padStart(2, '0');
-  var minutes = String(now.getMinutes()).padStart(2, '0');
-  var seconds = String(now.getSeconds()).padStart(2, '0');
+  worldRows.forEach(function(row) {
+    row.timeEl.textContent = getWorldTimeFormatter(row.tz).format(now);
 
-  currentTimeEl.textContent = hours + ':' + minutes + ':' + seconds;
+    var offset = row.tz ? worldDayOffset(row.tz, now) : 0;
+    if (offset > 0) {
+      row.dayEl.textContent = '+' + offset + 'd';
+    } else if (offset < 0) {
+      row.dayEl.textContent = offset + 'd';
+    } else {
+      row.dayEl.textContent = '';
+    }
+  });
 }
 
 function setText(id, value) {
@@ -376,7 +516,7 @@ function getWeather() {
   });
 }
 
-var DIAL_STYLES = ['classic', 'modern', 'minimal', 'vintage'];
+var DIAL_STYLES = ['classic', 'modern', 'minimal', 'vintage', 'neon', 'ocean'];
 
 function applyDialStyle(style) {
   var clockContainer = document.querySelector('.clock-container');
@@ -503,11 +643,16 @@ function init() {
   updateDate();
   setInterval(updateDate, 60000);
 
+  buildWorldClock();
+  updateWorldClock();
+  setInterval(updateWorldClock, 1000);
+
   getWeather();
 
   setupStyleSelector();
   setupTabs();
   setupModeToggle();
+  setupFormatToggle();
   loadSettings();
 }
 
