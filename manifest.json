@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Vitality Clock",
-  "version": "1.0.0",
-  "description": "A desktop digital clock Chrome extension with multiple dial styles, date display, and weather information",
+  "name": "Aurora Clock",
+  "version": "1.1.0",
+  "description": "A desktop analog clock with multiple dial styles, date display, and live weather from Open-Meteo",
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -17,14 +17,19 @@
     "open_in_tab": false
   },
   "permissions": [
-    "storage"
+    "storage",
+    "geolocation"
+  ],
+  "host_permissions": [
+    "https://api.open-meteo.com/*"
   ],
   "commands": {
     "_execute_action": {
       "suggested_key": {
         "default": "Ctrl+Shift+O",
         "mac": "Command+Shift+O"
-      }
+      },
+      "description": "Open Aurora Clock"
     }
   },
   "icons": {

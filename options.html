@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vitality Clock - Options</title>
+  <title>Aurora Clock - Options</title>
   <style>
     * {
       margin: 0;
@@ -221,6 +221,17 @@
     .status-message.show {
       display: block;
     }
+
+    .status-message.error {
+      background: linear-gradient(145deg, #fdecea, #ffffff);
+      color: #c62828;
+    }
+
+    .capture-hint {
+      font-size: 13px;
+      color: #4a90e2;
+      margin-top: 8px;
+    }
     
     .shortcut-info {
       background: linear-gradient(145deg, #e3f2fd, #ffffff);
@@ -241,7 +252,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Vitality Clock - Options</h1>
+    <h1>Aurora Clock - Options</h1>
     
     <div class="section">
       <h2>Keyboard Shortcuts</h2>
@@ -250,12 +261,14 @@
         <div class="shortcut-item">
           <label for="open-shortcut">Open Clock Popup Shortcut</label>
           <div class="shortcut-display">
-            <input type="text" id="open-shortcut" class="shortcut-input" placeholder="Click to set shortcut" readonly>
+            <input type="text" id="open-shortcut" class="shortcut-input" placeholder="Click Set Shortcut, then press keys" readonly>
             <button class="btn" id="set-open-shortcut">Set Shortcut</button>
             <button class="btn" id="reset-open-shortcut">Reset</button>
           </div>
+          <p class="capture-hint" id="capture-hint" hidden>Press a shortcut with Ctrl, Command, or Alt. Escape cancels.</p>
           <div class="shortcut-info">
             <p>Default Shortcut: <strong>Windows/Linux: Ctrl+Shift+O</strong> | <strong>Mac: Command+Shift+O</strong></p>
+            <p>Chrome applies this to the real extension command. If the browser blocks the change, use chrome://extensions/shortcuts.</p>
           </div>
         </div>
         
@@ -279,7 +292,7 @@
           <li>Click Chrome menu (three dots in the upper right corner)</li>
           <li>Select "More tools" > "Extensions"</li>
           <li>In the upper right corner of the extensions page, click "Keyboard shortcuts"</li>
-          <li>Find "Vitality Clock", you can view and modify all shortcuts</li>
+          <li>Find "Aurora Clock", you can view and modify all shortcuts</li>
         </ol>
       </div>
       

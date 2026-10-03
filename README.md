@@ -1,13 +1,13 @@
-# Vitality Clock
+# aurora-clock
 
-A Chrome extension that simulates a desktop digital clock with multiple dial styles, date display, and weather information.
+A Chrome extension that simulates a desktop analog clock with multiple dial styles, date display, and live weather.
 
 ## Features
 
 - 🎨 **Multiple Dial Styles**: Classic, Modern, Minimalist, and Vintage styles available
 - ⏰ **Real-time Clock Display**: Accurate analog clock with smooth hand animations
 - 📅 **Dual Date Display**: Shows both Gregorian and Lunar dates simultaneously
-- 🌤️ **Weather Information**: Displays current weather, temperature, humidity, and wind (simulated data)
+- 🌤️ **Live Weather**: Current conditions from Open-Meteo using the browser location
 - ⌨️ **Keyboard Shortcuts**: 
   - Default open shortcut: `Ctrl+Shift+O` (Windows/Linux) or `Command+Shift+O` (Mac)
   - Close popup shortcut: `Escape` (built-in feature)
@@ -48,24 +48,24 @@ A Chrome extension that simulates a desktop digital clock with multiple dial sty
 
 - Click the four style dots at the top of the plugin window
 - From left to right: Classic, Modern, Minimalist, Vintage
-- Style changes take effect in real-time
+- Style changes take effect immediately and are saved for the next open
 
 ### View Date and Time
 
 - Analog clock displayed on the left
 - Gregorian date, Lunar date, and digital clock displayed on the right
-- Weather information displayed at the bottom
+- Open the Weather tab for live temperature, humidity, wind, and related fields
 
 ## Project Structure
 
 ```
 ├── icons/              # Plugin icons
-│   └── icon.svg       # Main icon
 ├── manifest.json      # Plugin configuration file
 ├── popup.html         # Plugin popup window page
 ├── popup.js           # Plugin core logic
 ├── styles.css         # Plugin styles
-├── options.html       # Options page (reserved)
+├── options.html       # Shortcut options page
+├── options.js         # Shortcut command updates
 └── README.md          # Project documentation
 ```
 
@@ -74,26 +74,27 @@ A Chrome extension that simulates a desktop digital clock with multiple dial sty
 ### Clock Logic
 
 - Uses `Date` object to get current time
-- Implements smooth hand rotation animations using CSS transforms
-- Updates clock display every second
+- Rotates clock hands with CSS transforms
+- Uses requestAnimationFrame so the second hand moves smoothly
 
 ### Date Calculation
 
 - Formats Gregorian date using `toLocaleDateString`
-- Implements simplified Lunar calendar conversion logic
-- Updates date display every minute
+- Converts Gregorian dates to lunar dates for 1900-2049
+- Updates the date display every minute
 
 ### Weather Information
 
-- Currently uses simulated data (randomly selects weather)
-- Can be extended to call real weather APIs
-- Includes weather icon, temperature, description, humidity, and wind
+- Uses the Open-Meteo forecast API (no API key)
+- Reads location from the browser geolocation API
+- Caches the last successful result for the next open
 
 ### Style Switching
 
 - Switches between different styles using CSS class names
 - Four styles: Classic, Modern, Minimalist, Vintage
 - Click the style dots at the top to switch
+- Selected style is stored in chrome.storage.sync
 
 ## Browser Support
 
@@ -103,12 +104,12 @@ A Chrome extension that simulates a desktop digital clock with multiple dial sty
 
 ## Development Plan
 
-- [ ] Add real weather API support
-- [ ] Implement options page for user customization
+- [x] Live weather from Open-Meteo
+- [x] Options page for shortcut customization
 - [ ] Add more dial styles
 - [ ] Support 24-hour/12-hour format switching
 - [ ] Add world clock functionality
-- [ ] Support dark mode
+- [x] Dark / light mode toggle
 
 ## License
 
@@ -120,9 +121,9 @@ Issues and Pull Requests are welcome!
 
 ## Author
 
-- Project URL: [https://github.com/sky-jiangcheng/vitality-clock](https://github.com/sky-jiangcheng/vitality-clock)
+- Project URL: [https://github.com/sky-jiangcheng/aurora-clock](https://github.com/sky-jiangcheng/aurora-clock)
 - Contact: jiangcheng1806@gmail.com
 
 ---
 
-**Enjoy using Vitality Clock!** 🎉
+**Enjoy using Aurora Clock.**

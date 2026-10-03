@@ -1,7 +1,7 @@
 // Lunar calendar data encoding (well-known format used by Chinese calendar libraries)
 // Each entry encodes one lunar year's month structure:
 //   bits[3:0]  = leap month number (0 = no leap month)
-//   bits[4:15] = 12 bits for months 1-12 (1=30 days, 0=29 days), LSB=month1
+//   bits[15:4] = months 1-12 (1=30 days, 0=29 days), bit15=month 1
 //   bit[16]    = leap month days (0=29 days, 1=30 days)
 var lunarInfo = [
   0x04bd8, 0x04ae0, 0x0a570, 0x054d5, 0x0d260, 0x0d950, 0x16554, 0x056a0, 0x09ad0, 0x055d2,
@@ -21,38 +21,8 @@ var lunarInfo = [
   0x0b5a0, 0x056d0, 0x055b2, 0x049b0, 0x0a577, 0x0a4b0, 0x0aa50, 0x1b255, 0x06d20, 0x0ada0,
 ];
 
-var cnyDates = [
-  [1900, 0, 31], [1901, 1, 19], [1902, 1, 8],  [1903, 0, 29], [1904, 1, 16],
-  [1905, 1, 4],  [1906, 0, 25], [1907, 1, 13], [1908, 1, 2],  [1909, 0, 22],
-  [1910, 1, 10], [1911, 0, 30], [1912, 1, 18], [1913, 1, 6],  [1914, 0, 26],
-  [1915, 1, 14], [1916, 1, 3],  [1917, 0, 23], [1918, 1, 11], [1919, 1, 1],
-  [1920, 1, 20], [1921, 1, 8],  [1922, 0, 28], [1923, 1, 16], [1924, 1, 5],
-  [1925, 0, 24], [1926, 1, 13], [1927, 1, 2],  [1928, 0, 23], [1929, 1, 10],
-  [1930, 0, 30], [1931, 1, 17], [1932, 1, 6],  [1933, 0, 26], [1934, 1, 14],
-  [1935, 1, 4],  [1936, 0, 24], [1937, 1, 11], [1938, 0, 31], [1939, 1, 19],
-  [1940, 1, 8],  [1941, 0, 27], [1942, 1, 15], [1943, 1, 5],  [1944, 0, 25],
-  [1945, 1, 13], [1946, 1, 2],  [1947, 0, 22], [1948, 1, 10], [1949, 0, 29],
-  [1950, 1, 17], [1951, 1, 6],  [1952, 0, 27], [1953, 1, 14], [1954, 1, 3],
-  [1955, 0, 24], [1956, 1, 12], [1957, 0, 31], [1958, 1, 18], [1959, 1, 8],
-  [1960, 0, 28], [1961, 1, 15], [1962, 1, 5],  [1963, 0, 25], [1964, 1, 13],
-  [1965, 1, 2],  [1966, 0, 21], [1967, 1, 9],  [1968, 0, 30], [1969, 1, 17],
-  [1970, 1, 6],  [1971, 0, 27], [1972, 1, 15], [1973, 1, 3],  [1974, 0, 23],
-  [1975, 1, 11], [1976, 0, 31], [1977, 1, 18], [1978, 1, 7],  [1979, 0, 28],
-  [1980, 1, 16], [1981, 1, 5],  [1982, 0, 25], [1983, 1, 13], [1984, 1, 2],
-  [1985, 1, 20], [1986, 1, 9],  [1987, 0, 29], [1988, 1, 17], [1989, 1, 6],
-  [1990, 0, 27], [1991, 1, 15], [1992, 1, 4],  [1993, 0, 23], [1994, 1, 10],
-  [1995, 0, 31], [1996, 1, 19], [1997, 1, 7],  [1998, 0, 28], [1999, 1, 16],
-  [2000, 1, 5],  [2001, 0, 24], [2002, 1, 12], [2003, 1, 1],  [2004, 0, 22],
-  [2005, 1, 9],  [2006, 0, 29], [2007, 1, 18], [2008, 1, 7],  [2009, 0, 26],
-  [2010, 1, 14], [2011, 1, 3],  [2012, 0, 23], [2013, 1, 10], [2014, 0, 31],
-  [2015, 1, 19], [2016, 1, 8],  [2017, 0, 28], [2018, 1, 16], [2019, 1, 5],
-  [2020, 0, 25], [2021, 1, 12], [2022, 1, 1],  [2023, 0, 22], [2024, 1, 10],
-  [2025, 0, 29], [2026, 1, 17], [2027, 1, 6],  [2028, 0, 26], [2029, 1, 13],
-  [2030, 1, 3],  [2031, 0, 23], [2032, 1, 11], [2033, 0, 31], [2034, 1, 19],
-  [2035, 1, 8],  [2036, 0, 28], [2037, 1, 15], [2038, 1, 4],  [2039, 0, 24],
-  [2040, 1, 12], [2041, 1, 1],  [2042, 0, 22], [2043, 1, 10], [2044, 0, 30],
-  [2045, 1, 17], [2046, 1, 6],  [2047, 0, 26], [2048, 1, 14], [2049, 1, 2],
-];
+var LUNAR_START_YEAR = 1900;
+var LUNAR_END_YEAR = 2049;
 
 var lunarMonthNames = [
   '', '1st Month', '2nd Month', '3rd Month', '4th Month', '5th Month', '6th Month',
@@ -66,38 +36,42 @@ var lunarDayNames = [
 ];
 
 function getLunarYearDays(yearIndex) {
-  var info = lunarInfo[yearIndex];
   var sum = 0;
-  for (var i = 0; i < 12; i++) {
-    sum += ((info >> (4 + i)) & 1) ? 30 : 29;
+  for (var m = 1; m <= 12; m++) {
+    sum += getLunarMonthDays(yearIndex, m);
   }
-  var leapMonth = info & 0xf;
-  if (leapMonth > 0) {
-    sum += ((info >> 16) & 1) ? 30 : 29;
-  }
+  sum += getLeapMonthDays(yearIndex);
   return sum;
 }
 
 function getLunarMonthDays(yearIndex, month) {
   var info = lunarInfo[yearIndex];
-  var leapMonth = info & 0xf;
-  if (leapMonth > 0 && month > leapMonth) {
-    return ((info >> (4 + month - 2)) & 1) ? 30 : 29;
-  }
-  return ((info >> (4 + month - 1)) & 1) ? 30 : 29;
+  return (info & (0x10000 >> month)) ? 30 : 29;
 }
 
 function getLeapMonth(yearIndex) {
   return lunarInfo[yearIndex] & 0xf;
 }
 
+function getLeapMonthDays(yearIndex) {
+  var info = lunarInfo[yearIndex];
+  if ((info & 0xf) === 0) return 0;
+  return ((info >> 16) & 1) ? 30 : 29;
+}
+
 function getLunarDate(date) {
   var year = date.getFullYear();
-  var month = date.getMonth();
-  var day = date.getDate();
+  if (year < LUNAR_START_YEAR || year > LUNAR_END_YEAR) {
+    return 'Lunar date unavailable';
+  }
 
-  var baseDate = new Date(1900, 0, 31);
-  var offset = Math.floor((date.getTime() - baseDate.getTime()) / 86400000);
+  var utcDate = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+  var utcBase = Date.UTC(1900, 0, 31);
+  var offset = Math.round((utcDate - utcBase) / 86400000);
+
+  if (offset < 0) {
+    return 'Lunar date unavailable';
+  }
 
   var yearIndex = 0;
   var daysInYear = getLunarYearDays(yearIndex);
@@ -106,6 +80,10 @@ function getLunarDate(date) {
     offset -= daysInYear;
     yearIndex++;
     daysInYear = getLunarYearDays(yearIndex);
+  }
+
+  if (offset >= daysInYear) {
+    return 'Lunar date unavailable';
   }
 
   var leapMonth = getLeapMonth(yearIndex);
@@ -124,7 +102,7 @@ function getLunarDate(date) {
     offset -= monthDays;
 
     if (leapMonth === m) {
-      var leapDays = ((lunarInfo[yearIndex] >> 16) & 1) ? 30 : 29;
+      var leapDays = getLeapMonthDays(yearIndex);
       if (offset < leapDays) {
         lunarMonth = m;
         lunarDay = offset + 1;
@@ -136,10 +114,13 @@ function getLunarDate(date) {
   }
 
   var monthStr = lunarMonthNames[lunarMonth];
+  var dayStr = lunarDayNames[lunarDay];
+  if (!monthStr || !dayStr) {
+    return 'Lunar date unavailable';
+  }
   if (isLeap) {
     monthStr = 'Leap ' + monthStr;
   }
-  var dayStr = lunarDayNames[lunarDay];
 
   return monthStr + ' ' + dayStr;
 }
@@ -164,20 +145,38 @@ function createHourMarkers() {
   }
 }
 
-// Update clock hands
+var hourHandEl = null;
+var minuteHandEl = null;
+var secondHandEl = null;
+var solarDateEl = null;
+var lunarDateEl = null;
+var currentTimeEl = null;
+
+function cacheClockElements() {
+  hourHandEl = document.querySelector('.hour-hand');
+  minuteHandEl = document.querySelector('.minute-hand');
+  secondHandEl = document.querySelector('.second-hand');
+  solarDateEl = document.getElementById('solarDate');
+  lunarDateEl = document.getElementById('lunarDate');
+  currentTimeEl = document.getElementById('currentTime');
+}
+
 function updateClock() {
+  if (!hourHandEl || !minuteHandEl || !secondHandEl) return;
+
   var now = new Date();
   var hours = now.getHours();
   var minutes = now.getMinutes();
   var seconds = now.getSeconds();
+  var milliseconds = now.getMilliseconds();
 
-  var hourAngle = (hours % 12) * 30 + minutes * 0.5;
-  var minuteAngle = minutes * 6;
-  var secondAngle = seconds * 6;
+  var hourAngle = (hours % 12) * 30 + minutes * 0.5 + seconds * (0.5 / 60);
+  var minuteAngle = minutes * 6 + seconds * 0.1 + milliseconds * 0.0001;
+  var secondAngle = seconds * 6 + milliseconds * 0.006;
 
-  document.querySelector('.hour-hand').style.transform = 'translate(-50%, -100%) rotate(' + hourAngle + 'deg)';
-  document.querySelector('.minute-hand').style.transform = 'translate(-50%, -100%) rotate(' + minuteAngle + 'deg)';
-  document.querySelector('.second-hand').style.transform = 'translate(-50%, -100%) rotate(' + secondAngle + 'deg)';
+  hourHandEl.style.transform = 'translate(-50%, -100%) rotate(' + hourAngle + 'deg)';
+  minuteHandEl.style.transform = 'translate(-50%, -100%) rotate(' + minuteAngle + 'deg)';
+  secondHandEl.style.transform = 'translate(-50%, -100%) rotate(' + secondAngle + 'deg)';
 }
 
 function updateDate() {
@@ -192,88 +191,228 @@ function updateDate() {
   var solarDate = now.toLocaleDateString('en-US', options);
   var lunarDate = getLunarDate(now);
 
-  document.getElementById('solarDate').textContent = solarDate;
-  document.getElementById('lunarDate').textContent = lunarDate;
+  if (solarDateEl) solarDateEl.textContent = solarDate;
+  if (lunarDateEl) lunarDateEl.textContent = lunarDate;
 }
 
 function updateCurrentTime() {
+  if (!currentTimeEl) return;
+
   var now = new Date();
   var hours = String(now.getHours()).padStart(2, '0');
   var minutes = String(now.getMinutes()).padStart(2, '0');
   var seconds = String(now.getSeconds()).padStart(2, '0');
 
-  document.getElementById('currentTime').textContent = hours + ':' + minutes + ':' + seconds;
+  currentTimeEl.textContent = hours + ':' + minutes + ':' + seconds;
+}
+
+function setText(id, value) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
+
+function setWeatherStatus(message) {
+  setText('weatherStatus', message || '');
+}
+
+function weatherCodeInfo(code) {
+  var map = {
+    0: { icon: '\u2600\uFE0F', desc: 'Clear' },
+    1: { icon: '\uD83C\uDF24\uFE0F', desc: 'Mostly Clear' },
+    2: { icon: '\u26C5', desc: 'Partly Cloudy' },
+    3: { icon: '\u2601\uFE0F', desc: 'Overcast' },
+    45: { icon: '\uD83C\uDF2B\uFE0F', desc: 'Fog' },
+    48: { icon: '\uD83C\uDF2B\uFE0F', desc: 'Rime Fog' },
+    51: { icon: '\uD83C\uDF27\uFE0F', desc: 'Light Drizzle' },
+    53: { icon: '\uD83C\uDF27\uFE0F', desc: 'Drizzle' },
+    55: { icon: '\uD83C\uDF27\uFE0F', desc: 'Heavy Drizzle' },
+    56: { icon: '\uD83C\uDF27\uFE0F', desc: 'Freezing Drizzle' },
+    57: { icon: '\uD83C\uDF27\uFE0F', desc: 'Freezing Drizzle' },
+    61: { icon: '\uD83C\uDF27\uFE0F', desc: 'Light Rain' },
+    63: { icon: '\uD83C\uDF27\uFE0F', desc: 'Rain' },
+    65: { icon: '\uD83C\uDF27\uFE0F', desc: 'Heavy Rain' },
+    66: { icon: '\uD83C\uDF27\uFE0F', desc: 'Freezing Rain' },
+    67: { icon: '\uD83C\uDF27\uFE0F', desc: 'Freezing Rain' },
+    71: { icon: '\u2744\uFE0F', desc: 'Light Snow' },
+    73: { icon: '\u2744\uFE0F', desc: 'Snow' },
+    75: { icon: '\u2744\uFE0F', desc: 'Heavy Snow' },
+    77: { icon: '\u2744\uFE0F', desc: 'Snow Grains' },
+    80: { icon: '\uD83C\uDF27\uFE0F', desc: 'Light Showers' },
+    81: { icon: '\uD83C\uDF27\uFE0F', desc: 'Showers' },
+    82: { icon: '\uD83C\uDF27\uFE0F', desc: 'Heavy Showers' },
+    85: { icon: '\u2744\uFE0F', desc: 'Snow Showers' },
+    86: { icon: '\u2744\uFE0F', desc: 'Heavy Snow Showers' },
+    95: { icon: '\u26C8\uFE0F', desc: 'Thunderstorm' },
+    96: { icon: '\u26C8\uFE0F', desc: 'Thunderstorm' },
+    99: { icon: '\u26C8\uFE0F', desc: 'Thunderstorm' }
+  };
+  return map[code] || { icon: '\u26C5', desc: 'Cloudy' };
+}
+
+function uvLabel(uv) {
+  if (uv == null || isNaN(uv)) return '--';
+  if (uv < 3) return uv.toFixed(1) + ' Low';
+  if (uv < 6) return uv.toFixed(1) + ' Moderate';
+  if (uv < 8) return uv.toFixed(1) + ' High';
+  if (uv < 11) return uv.toFixed(1) + ' Very High';
+  return uv.toFixed(1) + ' Extreme';
+}
+
+function formatTime(iso) {
+  if (!iso) return '--';
+  var date = new Date(iso);
+  if (isNaN(date.getTime())) return '--';
+  return String(date.getHours()).padStart(2, '0') + ':' + String(date.getMinutes()).padStart(2, '0');
+}
+
+function formatCoordLocation(lat, lon) {
+  var latDir = lat >= 0 ? 'N' : 'S';
+  var lonDir = lon >= 0 ? 'E' : 'W';
+  return Math.abs(lat).toFixed(2) + '\u00B0' + latDir + ' ' + Math.abs(lon).toFixed(2) + '\u00B0' + lonDir;
+}
+
+function renderWeather(data) {
+  var current = data.current || {};
+  var daily = data.daily || {};
+  var info = weatherCodeInfo(current.weather_code);
+  var visKm = current.visibility == null ? null : current.visibility / 1000;
+
+  setText('weatherIconLarge', info.icon);
+  setText('weatherTempLarge', current.temperature_2m == null ? '--' : Math.round(current.temperature_2m) + '\u00B0');
+  setText('weatherDescLarge', info.desc);
+  setText('weatherFeels', current.apparent_temperature == null ? '--' : 'Feels like ' + Math.round(current.apparent_temperature) + '\u00B0C');
+  setText('wdHumidity', current.relative_humidity_2m == null ? '--' : current.relative_humidity_2m + '%');
+  setText('wdWind', current.wind_speed_10m == null ? '--' : Math.round(current.wind_speed_10m) + ' km/h');
+  setText('wdPressure', current.pressure_msl == null ? '--' : Math.round(current.pressure_msl) + ' hPa');
+  setText('wdVisibility', visKm == null ? '--' : visKm.toFixed(1) + ' km');
+  setText('wdUv', uvLabel(daily.uv_index_max && daily.uv_index_max[0]));
+  setText('wdSunrise', formatTime(daily.sunrise && daily.sunrise[0]));
+  setText('wdSunset', formatTime(daily.sunset && daily.sunset[0]));
+  setText('wdLocation', data.locationLabel || formatCoordLocation(data.latitude, data.longitude));
+}
+
+function saveWeatherCache(payload) {
+  if (typeof chrome !== 'undefined' && chrome.storage) {
+    chrome.storage.local.set({ weatherCache: payload });
+  }
+}
+
+function loadWeatherCache(callback) {
+  if (typeof chrome === 'undefined' || !chrome.storage) {
+    callback(null);
+    return;
+  }
+  chrome.storage.local.get(['weatherCache'], function(result) {
+    callback(result.weatherCache || null);
+  });
+}
+
+function fetchWeather(lat, lon, locationLabel) {
+  var url = 'https://api.open-meteo.com/v1/forecast'
+    + '?latitude=' + encodeURIComponent(lat)
+    + '&longitude=' + encodeURIComponent(lon)
+    + '&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,pressure_msl,wind_speed_10m,visibility'
+    + '&daily=sunrise,sunset,uv_index_max'
+    + '&timezone=auto'
+    + '&forecast_days=1';
+
+  return fetch(url).then(function(response) {
+    if (!response.ok) throw new Error('Weather request failed');
+    return response.json();
+  }).then(function(data) {
+    data.locationLabel = locationLabel || formatCoordLocation(lat, lon);
+    renderWeather(data);
+    saveWeatherCache({
+      fetchedAt: Date.now(),
+      lat: lat,
+      lon: lon,
+      locationLabel: data.locationLabel,
+      data: data
+    });
+    setWeatherStatus('');
+    return data;
+  });
+}
+
+function getCurrentPosition() {
+  return new Promise(function(resolve, reject) {
+    if (!navigator.geolocation) {
+      reject(new Error('Geolocation unavailable'));
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(resolve, reject, {
+      enableHighAccuracy: false,
+      timeout: 8000,
+      maximumAge: 15 * 60 * 1000
+    });
+  });
 }
 
 function getWeather() {
-  var now = new Date();
-  var hourSeed = Math.abs(now.getHours() + now.getDate() * 24 + (now.getMonth() + 1) * 24 * 31);
+  setWeatherStatus('Locating...');
 
-  var weatherScenarios = [
-    {
-      icon: '\u2600\uFE0F', desc: 'Sunny', temp: 28, feelsLike: 30,
-      humidity: 45, wind: '12 km/h', pressure: '1013 hPa',
-      visibility: '16 km', uv: 'High', sunrise: '05:42', sunset: '19:28', location: 'Beijing'
-    },
-    {
-      icon: '\uD83C\uDF24\uFE0F', desc: 'Partly Cloudy', temp: 22, feelsLike: 23,
-      humidity: 55, wind: '8 km/h', pressure: '1016 hPa',
-      visibility: '14 km', uv: 'Moderate', sunrise: '06:10', sunset: '18:55', location: 'Shanghai'
-    },
-    {
-      icon: '\uD83C\uDF27\uFE0F', desc: 'Light Rain', temp: 17, feelsLike: 16,
-      humidity: 85, wind: '18 km/h', pressure: '1008 hPa',
-      visibility: '6 km', uv: 'Low', sunrise: '06:30', sunset: '17:40', location: 'Chengdu'
-    },
-    {
-      icon: '\u26C5', desc: 'Cloudy', temp: 19, feelsLike: 18,
-      humidity: 65, wind: '15 km/h', pressure: '1011 hPa',
-      visibility: '10 km', uv: 'Low', sunrise: '06:05', sunset: '18:48', location: 'Guangzhou'
-    },
-    {
-      icon: '\u2744\uFE0F', desc: 'Snow', temp: -3, feelsLike: -7,
-      humidity: 78, wind: '22 km/h', pressure: '1020 hPa',
-      visibility: '3 km', uv: 'None', sunrise: '07:15', sunset: '16:55', location: 'Harbin'
-    },
-    {
-      icon: '\uD83C\uDF26\uFE0F', desc: 'Overcast', temp: 15, feelsLike: 14,
-      humidity: 70, wind: '10 km/h', pressure: '1014 hPa',
-      visibility: '9 km', uv: 'Low', sunrise: '06:20', sunset: '18:30', location: 'Nanjing'
+  loadWeatherCache(function(cache) {
+    if (cache && cache.data) {
+      renderWeather(cache.data);
+      setWeatherStatus('Updating...');
     }
-  ];
 
-  var index = hourSeed % weatherScenarios.length;
-  var w = weatherScenarios[index];
+    getCurrentPosition().then(function(position) {
+      var lat = position.coords.latitude;
+      var lon = position.coords.longitude;
+      return fetchWeather(lat, lon, formatCoordLocation(lat, lon));
+    }).catch(function() {
+      if (cache && cache.lat != null && cache.lon != null) {
+        return fetchWeather(cache.lat, cache.lon, cache.locationLabel);
+      }
+      throw new Error('Location unavailable');
+    }).catch(function() {
+      if (cache && cache.data) {
+        setWeatherStatus('Showing last update');
+        return;
+      }
+      setWeatherStatus('Allow location to load weather');
+    });
+  });
+}
 
-  document.getElementById('weatherIconLarge').textContent = w.icon;
-  document.getElementById('weatherTempLarge').textContent = w.temp + '\u00B0';
-  document.getElementById('weatherDescLarge').textContent = w.desc;
-  document.getElementById('weatherFeels').textContent = 'Feels like ' + w.feelsLike + '\u00B0C';
+var DIAL_STYLES = ['classic', 'modern', 'minimal', 'vintage'];
 
-  document.getElementById('wdHumidity').textContent = w.humidity + '%';
-  document.getElementById('wdWind').textContent = w.wind;
-  document.getElementById('wdPressure').textContent = w.pressure;
-  document.getElementById('wdVisibility').textContent = w.visibility;
-  document.getElementById('wdUv').textContent = w.uv;
-  document.getElementById('wdSunrise').textContent = w.sunrise;
-  document.getElementById('wdSunset').textContent = w.sunset;
-  document.getElementById('wdLocation').textContent = w.location;
+function applyDialStyle(style) {
+  var clockContainer = document.querySelector('.clock-container');
+  var styleDots = document.querySelectorAll('.style-dot');
+  if (!clockContainer) return;
+
+  if (DIAL_STYLES.indexOf(style) === -1) {
+    style = 'classic';
+  }
+
+  DIAL_STYLES.forEach(function(name) {
+    clockContainer.classList.remove('style-' + name);
+  });
+  if (style !== 'classic') {
+    clockContainer.classList.add('style-' + style);
+  }
+
+  styleDots.forEach(function(dot) {
+    dot.classList.toggle('active', dot.dataset.style === style);
+  });
+}
+
+function saveDialStyle(style) {
+  if (typeof chrome !== 'undefined' && chrome.storage) {
+    chrome.storage.sync.set({ dialStyle: style });
+  }
 }
 
 function setupStyleSelector() {
   var styleDots = document.querySelectorAll('.style-dot');
-  var clockContainer = document.querySelector('.clock-container');
 
   styleDots.forEach(function(dot) {
     dot.addEventListener('click', function() {
-      styleDots.forEach(function(d) { d.classList.remove('active'); });
-      dot.classList.add('active');
-
-      clockContainer.className = 'clock-container';
-      var style = dot.dataset.style;
-      if (style) {
-        clockContainer.classList.add('style-' + style);
-      }
+      var style = dot.dataset.style || 'classic';
+      applyDialStyle(style);
+      saveDialStyle(style);
     });
   });
 }
@@ -285,12 +424,14 @@ function setupTabs() {
   tabBtns.forEach(function(btn) {
     btn.addEventListener('click', function() {
       var tabName = btn.dataset.tab;
+      var target = document.getElementById('tab-' + tabName);
+      if (!target) return;
 
       tabBtns.forEach(function(b) { b.classList.remove('active'); });
       tabViews.forEach(function(v) { v.classList.remove('active'); });
 
       btn.classList.add('active');
-      document.getElementById('tab-' + tabName).classList.add('active');
+      target.classList.add('active');
     });
   });
 }
@@ -320,16 +461,24 @@ function setupModeToggle() {
     }
   }
 
-  toggle.addEventListener('click', function() {
-    var isLight = document.body.classList.contains('light');
-    setMode(!isLight);
-  });
+  if (toggle) {
+    toggle.addEventListener('click', function() {
+      var isLight = document.body.classList.contains('light');
+      setMode(!isLight);
+    });
+  }
 
   loadMode();
 }
 
 function loadSettings() {
-  // Reserved for future settings
+  if (typeof chrome === 'undefined' || !chrome.storage) return;
+
+  chrome.storage.sync.get(['dialStyle'], function(result) {
+    if (result.dialStyle) {
+      applyDialStyle(result.dialStyle);
+    }
+  });
 }
 
 function setupKeyboardShortcuts() {
@@ -341,16 +490,18 @@ function setupKeyboardShortcuts() {
 }
 
 function init() {
+  cacheClockElements();
   createHourMarkers();
 
-  updateClock();
-  setInterval(updateClock, 1000);
+  function tick() {
+    updateClock();
+    updateCurrentTime();
+    requestAnimationFrame(tick);
+  }
+  tick();
 
   updateDate();
   setInterval(updateDate, 60000);
-
-  updateCurrentTime();
-  setInterval(updateCurrentTime, 1000);
 
   getWeather();
 

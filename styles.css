@@ -8,31 +8,35 @@
    CSS Variables: Dark (default)
    ============================ */
 body {
-  --bg-body: #0a0a0f;
-  --bg-container: linear-gradient(160deg, #111118 0%, #0a0a10 40%, #06060c 100%);
-  --bg-container-b: 1px solid rgba(255,255,255,0.04);
-  --bg-dial: radial-gradient(circle at 50% 40%, #1c1c28 0%, #13131e 100%);
-  --bg-dial-b: 1px solid rgba(255,255,255,0.07);
-  --bg-dial-shadow: 0 0 40px rgba(108,140,255,0.05), 0 8px 30px rgba(0,0,0,0.4);
-  --bg-panel: rgba(255,255,255,0.04);
-  --bg-panel-b: 1px solid rgba(255,255,255,0.05);
+  --bg-body: #07070c;
+  --bg-container: linear-gradient(165deg, #16161f 0%, #0e0e16 48%, #09090f 100%);
+  --bg-rim: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.03) 38%, rgba(0,0,0,0.35));
+  --bg-dial: radial-gradient(circle at 48% 36%, #232333 0%, #141422 58%, #0c0c14 100%);
+  --bg-dial-shadow:
+    0 0 0 1px rgba(255,255,255,0.04),
+    0 0 0 5px rgba(18,18,28,0.95),
+    0 0 0 6px rgba(255,255,255,0.08),
+    0 10px 28px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+  --bg-panel: rgba(255,255,255,0.035);
+  --bg-panel-b: 1px solid rgba(255,255,255,0.07);
   --bg-card: rgba(255,255,255,0.04);
-  --bg-card-b: 1px solid rgba(255,255,255,0.05);
+  --bg-card-b: 1px solid rgba(255,255,255,0.07);
   --bg-card-hover: rgba(255,255,255,0.08);
-  --bg-switch: rgba(255,255,255,0.05);
+  --bg-switch: rgba(255,255,255,0.06);
   --text-primary: rgba(255,255,255,0.88);
   --text-secondary: rgba(255,255,255,0.5);
   --text-tertiary: rgba(255,255,255,0.3);
-  --text-brand: rgba(255,255,255,0.2);
-  --accent: #7b93f0;
-  --accent-glow: rgba(123,147,240,0.5);
+  --text-brand: rgba(255,255,255,0.22);
+  --accent: #8ea2f4;
+  --accent-glow: rgba(142,162,244,0.45);
   --second-hand: #c44536;
-  --hour-hand: rgba(255,255,255,0.85);
-  --minute-hand: rgba(255,255,255,0.6);
-  --marker: rgba(255,255,255,0.2);
-  --marker-major: rgba(255,255,255,0.35);
+  --hour-hand: rgba(255,255,255,0.88);
+  --minute-hand: rgba(255,255,255,0.62);
+  --marker: rgba(255,255,255,0.22);
+  --marker-major: rgba(255,255,255,0.4);
   --dial-texture: none;
-  --center-dot: #7b93f0;
+  --center-dot: #8ea2f4;
   --mode-icon-display-dark: block;
   --mode-icon-display-light: none;
 
@@ -43,7 +47,7 @@ body {
   overflow: hidden;
   margin: 0;
   padding: 0;
-  border-radius: 30px;
+  border-radius: 0;
   transition: background 0.4s ease;
 }
 
@@ -51,17 +55,21 @@ body {
    Light mode
    ============================ */
 body.light {
-  --bg-body: #dcd7d0;
-  --bg-container: linear-gradient(160deg, #f2ede6 0%, #e8e3da 40%, #dfd9cf 100%);
-  --bg-container-b: 1px solid rgba(0,0,0,0.06);
-  --bg-dial: radial-gradient(circle at 50% 40%, #faf7f2 0%, #efe9e0 100%);
-  --bg-dial-b: 1px solid rgba(0,0,0,0.08);
-  --bg-dial-shadow: 0 0 40px rgba(0,0,0,0.04), 0 8px 30px rgba(0,0,0,0.08);
-  --bg-panel: rgba(0,0,0,0.025);
+  --bg-body: #d8d3cc;
+  --bg-container: linear-gradient(165deg, #f7f3ec 0%, #ece6dc 48%, #e4ddd3 100%);
+  --bg-rim: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.2) 40%, rgba(0,0,0,0.08));
+  --bg-dial: radial-gradient(circle at 48% 36%, #fffaf3 0%, #f3ece2 58%, #e8e0d4 100%);
+  --bg-dial-shadow:
+    0 0 0 1px rgba(255,255,255,0.7),
+    0 0 0 5px #ece6dc,
+    0 0 0 6px rgba(0,0,0,0.08),
+    0 10px 24px rgba(0,0,0,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+  --bg-panel: rgba(255,255,255,0.35);
   --bg-panel-b: 1px solid rgba(0,0,0,0.06);
-  --bg-card: rgba(0,0,0,0.025);
-  --bg-card-b: 1px solid rgba(0,0,0,0.05);
-  --bg-card-hover: rgba(0,0,0,0.05);
+  --bg-card: rgba(255,255,255,0.4);
+  --bg-card-b: 1px solid rgba(0,0,0,0.06);
+  --bg-card-hover: rgba(255,255,255,0.6);
   --bg-switch: rgba(0,0,0,0.06);
   --text-primary: rgba(0,0,0,0.82);
   --text-secondary: rgba(0,0,0,0.5);
@@ -87,41 +95,46 @@ body.light {
   width: 100%;
   height: 100%;
   background: var(--bg-container);
-  border-radius: 30px;
-  box-shadow:
-    0 20px 60px rgba(0,0,0,0.5),
-    inset 0 1px 0 rgba(255,255,255,0.04);
-  padding: 22px 26px 26px 26px;
+  border-radius: 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+  padding: 20px 22px 22px;
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  border: var(--bg-container-b);
+  border: none;
   transition: background 0.4s ease, border-color 0.4s ease;
 }
 
 .clock-container::before {
   content: '';
   position: absolute;
-  top: -80px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 280px;
-  height: 180px;
-  background: radial-gradient(ellipse, rgba(108,140,255,0.05) 0%, transparent 70%);
-  border-radius: 50%;
+  inset: 8px;
+  border-radius: 22px;
+  padding: 1px;
+  background: var(--bg-rim);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
   pointer-events: none;
-  z-index: 0;
+  z-index: 3;
+  opacity: 0.9;
 }
 
 .clock-container::after {
   content: '';
   position: absolute;
-  bottom: -40px;
-  right: -60px;
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(ellipse, rgba(108,140,255,0.03) 0%, transparent 70%);
+  top: -90px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  height: 180px;
+  background: radial-gradient(ellipse, rgba(142,162,244,0.08) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
@@ -311,17 +324,37 @@ body.light {
   height: 180px;
   background: var(--bg-dial);
   border-radius: 50%;
-  border: var(--bg-dial-b);
+  border: none;
   box-shadow: var(--bg-dial-shadow);
   position: relative;
   overflow: hidden;
 }
 
+.clock-dial::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  padding: 2px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.28), rgba(255,255,255,0.04) 42%, rgba(0,0,0,0.35) 100%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 4;
+}
+
 .dial-texture {
   position: absolute;
-  inset: 6px;
+  inset: 8px;
   border-radius: 50%;
-  border: 1px solid rgba(128,128,128,0.06);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: inset 0 0 0 5px rgba(0,0,0,0.12);
   pointer-events: none;
   z-index: 0;
 }
@@ -371,6 +404,7 @@ body.light {
   transform-origin: bottom center;
   transform: translate(-50%, -100%);
   border-radius: 1.5px 1.5px 0 0;
+  will-change: transform;
 }
 
 .hour-hand::after {
@@ -396,6 +430,7 @@ body.light {
   transform-origin: bottom center;
   transform: translate(-50%, -100%);
   border-radius: 1px 1px 0 0;
+  will-change: transform;
 }
 
 .minute-hand::after {
@@ -422,6 +457,7 @@ body.light {
   transform: translate(-50%, -100%);
   border-radius: 0.5px;
   z-index: 5;
+  will-change: transform;
 }
 
 .second-hand::before {
@@ -560,6 +596,13 @@ body.light {
   margin-top: 6px;
 }
 
+.weather-status {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  min-height: 16px;
+}
+
 .weather-details-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -603,8 +646,12 @@ body.light {
 
 /* Modern */
 .style-modern .clock-dial {
-  --bg-dial-b: 1px solid rgba(123,147,240,0.15);
-  --bg-dial-shadow: 0 0 50px rgba(123,147,240,0.08), 0 8px 30px rgba(0,0,0,0.4);
+  --bg-dial-shadow:
+    0 0 0 1px rgba(142,162,244,0.18),
+    0 0 0 5px rgba(18,18,28,0.95),
+    0 0 0 6px rgba(142,162,244,0.22),
+    0 10px 28px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.16);
 }
 
 .style-modern .hour-hand,
@@ -622,8 +669,12 @@ body.light {
 
 /* Minimal */
 .style-minimal .clock-dial {
-  --bg-dial-b: none;
   --bg-dial-shadow: none;
+}
+
+.style-minimal .clock-dial::before,
+.style-minimal .dial-texture {
+  display: none;
 }
 
 .style-minimal .clock-numbers {
@@ -653,8 +704,13 @@ body.light {
 
 /* Vintage */
 .style-vintage .clock-dial {
-  background: radial-gradient(circle at 50% 40%, #f5f0e5, #e8e0d0);
-  --bg-dial-b: 1px solid rgba(139,69,19,0.12);
+  background: radial-gradient(circle at 48% 36%, #f7f1e4, #e8decc 60%, #d9ccb6 100%);
+  --bg-dial-shadow:
+    0 0 0 1px rgba(255,236,210,0.5),
+    0 0 0 5px #cbb99a,
+    0 0 0 6px rgba(92,64,32,0.28),
+    0 10px 24px rgba(80,50,20,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.7);
 }
 
 .style-vintage .hour-hand,
@@ -686,8 +742,13 @@ body.light {
   }
 
   .clock-container {
-    padding: 16px 20px 20px 20px;
-    border-radius: 30px;
+    padding: 16px 18px 18px;
+    border-radius: 0;
+  }
+
+  .clock-container::before {
+    inset: 6px;
+    border-radius: 18px;
   }
 
   .clock-dial {
