@@ -1,0 +1,46 @@
+name: Publish to Chrome Web Store
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Build and publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify tag matches manifest version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF_NAME#v}"
+          pkg="$(jq -r .version manifest.json)"
+          if [ "$tag" != "$pkg" ]; then
+            echo "::error::tag '$tag' does not match manifest.json version '$pkg'"
+            exit 1
+          fi
+          echo "manifest version $pkg matches tag $GITHUB_REF_NAME"
+
+      - name: Build extension package
+        run: |
+          set -euo pipefail
+          rm -f aurora-clock.zip
+          zip -rq aurora-clock.zip \
+            manifest.json popup.html popup.js options.html options.js styles.css icons LICENSE
+          unzip -l aurora-clock.zip
+
+      - name: Upload and publish to Chrome Web Store
+        uses: mnao305/chrome-extension-upload@v7.0.0
+        with:
+          file-path: aurora-clock.zip
+          extension-id: ${{ secrets.CWS_EXTENSION_ID }}
+          publisher-id: ${{ secrets.CWS_PUBLISHER_ID }}
+          client-id: ${{ secrets.CWS_CLIENT_ID }}
+          client-secret: ${{ secrets.CWS_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.CWS_REFRESH_TOKEN }}
+          publish: true
