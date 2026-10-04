@@ -639,7 +639,6 @@ var SKY_BUILDINGS = [
   { w: 5, h: 74 }, { w: 4, h: 38 }, { w: 6, h: 56 }, { w: 4, h: 32 }
 ];
 
-var POPUP_WIDTH = 420;
 var CITY_STRIP_RATIO = 0.46;
 var skylineBuilt = false;
 
@@ -684,7 +683,8 @@ function buildSkyline() {
   if (!city) return;
 
   var totalW = SKY_BUILDINGS.reduce(function(sum, b) { return sum + b.w; }, 0);
-  var stripH = POPUP_WIDTH * CITY_STRIP_RATIO;
+  var cityW = city.clientWidth || 480;
+  var stripH = city.clientHeight || cityW * CITY_STRIP_RATIO;
   var left = 0;
 
   SKY_BUILDINGS.forEach(function(b) {
@@ -697,7 +697,7 @@ function buildSkyline() {
     city.appendChild(el);
     left += widthPct;
 
-    var winPx = (widthPct / 100) * POPUP_WIDTH;
+    var winPx = (widthPct / 100) * cityW;
     var bldPx = (b.h / 100) * stripH;
     var cols = Math.max(1, Math.floor((winPx - 8) / 9));
     var rows = Math.max(1, Math.floor((bldPx - 10) / 8));

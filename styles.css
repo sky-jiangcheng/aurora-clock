@@ -42,8 +42,8 @@ body {
 
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   background: var(--bg-body);
-  width: 420px;
-  height: 420px;
+  width: 560px;
+  height: 560px;
   overflow: hidden;
   margin: 0;
   padding: 0;
@@ -97,7 +97,7 @@ body.light {
   background: var(--bg-container);
   border-radius: 0;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
-  padding: 20px 22px 22px;
+  padding: 24px 26px 26px;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -344,7 +344,7 @@ body[data-sky="dawn"] .win.win-steady {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   position: relative;
   z-index: 1;
 }
@@ -528,11 +528,11 @@ body[data-sky="dawn"] .win.win-steady {
 .main-content {
   flex: 1;
   display: flex;
-  gap: 18px;
+  gap: 20px;
 }
 
 .clock-face {
-  flex: 1;
+  flex: 1.1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -540,8 +540,9 @@ body[data-sky="dawn"] .win.win-steady {
 
 /* ---- Dial ---- */
 .clock-dial {
-  width: 180px;
-  height: 180px;
+  --dial: 240px;
+  width: var(--dial);
+  height: var(--dial);
   background: var(--bg-dial);
   border-radius: 50%;
   border: none;
@@ -571,7 +572,7 @@ body[data-sky="dawn"] .win.win-steady {
 
 .dial-texture {
   position: absolute;
-  inset: 8px;
+  inset: 10px;
   border-radius: 50%;
   border: 1px solid rgba(255,255,255,0.06);
   box-shadow: inset 0 0 0 5px rgba(0,0,0,0.12);
@@ -582,21 +583,21 @@ body[data-sky="dawn"] .win.win-steady {
 /* ---- Hour markers ---- */
 .hour-marker {
   position: absolute;
-  top: 13px;
+  top: 17px;
   left: 50%;
   width: 1px;
-  height: 10px;
+  height: 13px;
   background: var(--marker);
-  transform-origin: 50% calc(90px - 13px);
+  transform-origin: 50% calc(var(--dial) / 2 - 17px);
   z-index: 1;
 }
 
 .hour-marker.major {
   width: 1.5px;
-  height: 16px;
-  top: 11px;
+  height: 21px;
+  top: 14px;
   background: var(--marker-major);
-  transform-origin: 50% calc(90px - 11px);
+  transform-origin: 50% calc(var(--dial) / 2 - 14px);
 }
 
 /* ---- Center ---- */
@@ -605,8 +606,8 @@ body[data-sky="dawn"] .win.win-steady {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 7px;
-  height: 7px;
+  width: 10px;
+  height: 10px;
   background: var(--center-dot);
   border-radius: 50%;
   z-index: 10;
@@ -619,7 +620,7 @@ body[data-sky="dawn"] .win.win-steady {
   top: 50%;
   left: 50%;
   width: 3px;
-  height: 50px;
+  height: calc(var(--dial) * 0.28);
   background: var(--hour-hand);
   transform-origin: bottom center;
   transform: translate(-50%, -100%);
@@ -645,7 +646,7 @@ body[data-sky="dawn"] .win.win-steady {
   top: 50%;
   left: 50%;
   width: 2px;
-  height: 68px;
+  height: calc(var(--dial) * 0.378);
   background: var(--minute-hand);
   transform-origin: bottom center;
   transform: translate(-50%, -100%);
@@ -671,7 +672,7 @@ body[data-sky="dawn"] .win.win-steady {
   top: 50%;
   left: 50%;
   width: 1px;
-  height: 76px;
+  height: calc(var(--dial) * 0.42);
   background: var(--second-hand);
   transform-origin: bottom center;
   transform: translate(-50%, -100%);
@@ -703,25 +704,25 @@ body[data-sky="dawn"] .win.win-steady {
 
 .number {
   position: absolute;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 400;
   color: var(--marker-major);
   transform: translate(-50%, -50%);
   letter-spacing: 0.5px;
 }
 
-.number:nth-child(1) { top: 20px; left: 50%; }
-.number:nth-child(2) { top: 50%; right: 18px; transform: translate(50%, -50%); }
-.number:nth-child(3) { bottom: 18px; left: 50%; transform: translate(-50%, 50%); }
-.number:nth-child(4) { top: 50%; left: 18px; transform: translate(-50%, -50%); }
+.number:nth-child(1) { top: 26px; left: 50%; }
+.number:nth-child(2) { top: 50%; right: 24px; transform: translate(50%, -50%); }
+.number:nth-child(3) { bottom: 24px; left: 50%; transform: translate(-50%, 50%); }
+.number:nth-child(4) { top: 50%; left: 24px; transform: translate(-50%, -50%); }
 
 /* ---- Brand ---- */
 .dial-brand {
   position: absolute;
-  bottom: 44px;
+  bottom: 58px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 500;
   letter-spacing: 2.5px;
   color: var(--text-brand);
@@ -734,7 +735,7 @@ body[data-sky="dawn"] .win.win-steady {
   flex: 1;
   background: var(--bg-panel);
   border-radius: 16px;
-  padding: 20px;
+  padding: 26px;
   border: var(--bg-panel-b);
   display: flex;
   flex-direction: column;
@@ -744,20 +745,20 @@ body[data-sky="dawn"] .win.win-steady {
 }
 
 .solar-date {
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 500;
   color: var(--text-primary);
-  margin-bottom: 12px;
-}
-
-.lunar-date {
-  font-size: 14px;
-  color: var(--text-secondary);
   margin-bottom: 14px;
 }
 
+.lunar-date {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
 .current-time {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 500;
   color: var(--text-primary);
   font-family: 'SF Mono', 'Menlo', 'Courier New', monospace;
@@ -771,32 +772,32 @@ body[data-sky="dawn"] .win.win-steady {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
 
 .weather-hero {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 12px 0 4px 0;
+  padding: 10px 0 4px 0;
 }
 
 .weather-icon-large {
-  width: 68px;
-  height: 68px;
+  width: 80px;
+  height: 80px;
   background: var(--bg-panel);
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 32px;
+  font-size: 38px;
   border: var(--bg-panel-b);
   box-shadow: 0 0 30px rgba(108,140,255,0.05);
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .weather-temp-large {
-  font-size: 52px;
+  font-size: 60px;
   font-weight: 200;
   color: var(--text-primary);
   line-height: 1;
@@ -804,21 +805,21 @@ body[data-sky="dawn"] .win.win-steady {
 }
 
 .weather-desc-large {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 400;
   color: var(--text-secondary);
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .weather-feels {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-tertiary);
   margin-top: 6px;
 }
 
 .weather-status {
   margin-top: 8px;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-tertiary);
   min-height: 16px;
 }
@@ -826,13 +827,13 @@ body[data-sky="dawn"] .win.win-steady {
 .weather-details-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  gap: 10px;
 }
 
 .detail-card {
   background: var(--bg-card);
   border-radius: 12px;
-  padding: 12px 6px;
+  padding: 12px 8px;
   border: var(--bg-card-b);
   display: flex;
   flex-direction: column;
@@ -847,7 +848,7 @@ body[data-sky="dawn"] .win.win-steady {
 }
 
 .dc-label {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.6px;
@@ -855,7 +856,7 @@ body[data-sky="dawn"] .win.win-steady {
 }
 
 .dc-value {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--text-secondary);
 }
@@ -874,7 +875,7 @@ body[data-sky="dawn"] .win.win-steady {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .world-row {
@@ -882,8 +883,8 @@ body[data-sky="dawn"] .win.win-steady {
   align-items: center;
   background: var(--bg-card);
   border: var(--bg-card-b);
-  border-radius: 12px;
-  padding: 10px 14px;
+  border-radius: 14px;
+  padding: 12px 16px;
   transition: background 0.25s ease;
 }
 
@@ -893,13 +894,13 @@ body[data-sky="dawn"] .win.win-steady {
 
 .world-city {
   flex: 1;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--text-primary);
 }
 
 .world-day {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--accent);
   margin-right: 10px;
@@ -907,7 +908,7 @@ body[data-sky="dawn"] .win.win-steady {
 }
 
 .world-time {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--text-secondary);
   font-family: 'SF Mono', 'Menlo', 'Courier New', monospace;
