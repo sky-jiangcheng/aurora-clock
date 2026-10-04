@@ -629,6 +629,122 @@ function setupKeyboardShortcuts() {
   });
 }
 
+// ---- Skyline background ----
+// Deterministic-ish skyline profile: each entry is one building's relative width
+// and its height as a percentage of the city strip.
+var SKY_BUILDINGS = [
+  { w: 5, h: 34 }, { w: 4, h: 52 }, { w: 6, h: 40 }, { w: 4, h: 64 },
+  { w: 5, h: 30 }, { w: 4, h: 72 }, { w: 6, h: 46 }, { w: 4, h: 58 },
+  { w: 5, h: 36 }, { w: 4, h: 68 }, { w: 6, h: 42 }, { w: 4, h: 50 },
+  { w: 5, h: 74 }, { w: 4, h: 38 }, { w: 6, h: 56 }, { w: 4, h: 32 }
+];
+
+var POPUP_WIDTH = 420;
+var CITY_STRIP_RATIO = 0.46;
+var skylineBuilt = false;
+
+function buildSkyline() {
+  if (skylineBuilt) return;
+  var skyline = document.getElementById('skyline');
+  if (!skyline) return;
+  skylineBuilt = true;
+
+  var stars = document.getElementById('skyStars');
+  if (stars) {
+    for (var i = 0; i < 46; i++) {
+      var star = document.createElement('span');
+      star.className = 'star';
+      star.style.left = (Math.random() * 100).toFixed(2) + '%';
+      star.style.top = (Math.random() * 62).toFixed(2) + '%';
+      var size = Math.random() < 0.25 ? 2.5 : 1.6;
+      star.style.width = size + 'px';
+      star.style.height = size + 'px';
+      star.style.animationDuration = (2.6 + Math.random() * 3.4).toFixed(2) + 's';
+      star.style.animationDelay = (-Math.random() * 7).toFixed(2) + 's';
+      stars.appendChild(star);
+    }
+  }
+
+  var clouds = document.getElementById('skyClouds');
+  if (clouds) {
+    for (var c = 0; c < 4; c++) {
+      var cloud = document.createElement('span');
+      cloud.className = 'cloud';
+      cloud.style.width = (26 + Math.random() * 30).toFixed(0) + 'px';
+      cloud.style.height = (7 + Math.random() * 4).toFixed(1) + 'px';
+      cloud.style.top = (8 + Math.random() * 30).toFixed(1) + '%';
+      cloud.style.left = '0';
+      cloud.style.animationDuration = (110 + Math.random() * 80).toFixed(0) + 's';
+      cloud.style.animationDelay = (-Math.random() * 160).toFixed(0) + 's';
+      clouds.appendChild(cloud);
+    }
+  }
+
+  var city = document.getElementById('skyCity');
+  if (!city) return;
+
+  var totalW = SKY_BUILDINGS.reduce(function(sum, b) { return sum + b.w; }, 0);
+  var stripH = POPUP_WIDTH * CITY_STRIP_RATIO;
+  var left = 0;
+
+  SKY_BUILDINGS.forEach(function(b) {
+    var widthPct = (b.w / totalW) * 100;
+    var el = document.createElement('div');
+    el.className = 'building';
+    el.style.left = left.toFixed(2) + '%';
+    el.style.width = widthPct.toFixed(2) + '%';
+    el.style.height = b.h + '%';
+    city.appendChild(el);
+    left += widthPct;
+
+    var winPx = (widthPct / 100) * POPUP_WIDTH;
+    var bldPx = (b.h / 100) * stripH;
+    var cols = Math.max(1, Math.floor((winPx - 8) / 9));
+    var rows = Math.max(1, Math.floor((bldPx - 10) / 8));
+    var count = Math.min(cols * rows, 40);
+
+    el.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+    for (var k = 0; k < count; k++) {
+      var win = document.createElement('span');
+      win.className = 'win';
+      if (Math.random() < 0.5) {
+        win.classList.add('win-steady');
+        win.style.setProperty('--steady', (0.3 + Math.random() * 0.5).toFixed(2));
+      } else {
+        win.style.setProperty('--blink-dur', (6 + Math.random() * 9).toFixed(1) + 's');
+        win.style.setProperty('--blink-delay', (-Math.random() * 12).toFixed(1) + 's');
+      }
+      el.appendChild(win);
+    }
+  });
+}
+
+function currentDaypart(hour) {
+  if (hour >= 5 && hour < 8) return 'dawn';
+  if (hour >= 8 && hour < 17) return 'day';
+  if (hour >= 17 && hour < 20) return 'dusk';
+  return 'night';
+}
+
+function placeCelestial(el, progress) {
+  if (!el) return;
+  if (progress < 0) progress = 0;
+  if (progress > 1) progress = 1;
+  el.style.left = (8 + progress * 84).toFixed(2) + '%';
+  el.style.top = (68 - Math.sin(progress * Math.PI) * 44).toFixed(2) + '%';
+}
+
+function updateSky() {
+  var now = new Date();
+  var hour = now.getHours() + now.getMinutes() / 60;
+
+  document.body.setAttribute('data-sky', currentDaypart(now.getHours()));
+
+  // Sun travels the 06:00-18:00 arc, the moon the 18:00-06:00 arc.
+  placeCelestial(document.getElementById('skySun'), (hour - 6) / 12);
+  placeCelestial(document.getElementById('skyMoon'), (((hour - 18) % 24) + 24) % 24 / 12);
+}
+
 function init() {
   cacheClockElements();
   createHourMarkers();
@@ -648,6 +764,10 @@ function init() {
   setInterval(updateWorldClock, 1000);
 
   getWeather();
+
+  buildSkyline();
+  updateSky();
+  setInterval(updateSky, 30000);
 
   setupStyleSelector();
   setupTabs();

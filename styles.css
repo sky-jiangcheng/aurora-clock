@@ -141,6 +141,203 @@ body.light {
 }
 
 /* ============================
+   Skyline background
+   ============================ */
+body {
+  --sky-opacity: 0.42;
+  --city-opacity: 0.6;
+  --stars-opacity: 0.9;
+  --sky-top: #05070f;
+  --sky-mid: #0d1428;
+  --sky-bottom: #1b2440;
+  --city: #03050c;
+  --win: #ffd9a0;
+}
+
+body.light {
+  --sky-opacity: 0.2;
+  --city-opacity: 0.26;
+  --stars-opacity: 0.35;
+}
+
+body[data-sky="dawn"] {
+  --sky-top: #2c3a6e;
+  --sky-mid: #b9748a;
+  --sky-bottom: #f0b184;
+  --city: #171d33;
+  --win: #ffd9a0;
+}
+
+body[data-sky="day"] {
+  --sky-top: #4a6a9a;
+  --sky-mid: #77a0cc;
+  --sky-bottom: #aecbe6;
+  --city: #33405c;
+  --win: #dfe8f5;
+}
+
+body[data-sky="dusk"] {
+  --sky-top: #2b2a58;
+  --sky-mid: #b85f52;
+  --sky-bottom: #e79a63;
+  --city: #14172b;
+  --win: #ffcf8a;
+}
+
+.skyline {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.sky {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 48%, var(--sky-bottom) 100%);
+  opacity: var(--sky-opacity);
+  transition: background 1.2s ease, opacity 1.2s ease;
+}
+
+.sky-stars {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+
+body[data-sky="night"] .sky-stars { opacity: var(--stars-opacity); }
+body[data-sky="dusk"] .sky-stars { opacity: calc(var(--stars-opacity) * 0.45); }
+body[data-sky="dawn"] .sky-stars { opacity: calc(var(--stars-opacity) * 0.18); }
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
+  animation: skyTwinkle 4s ease-in-out infinite;
+}
+
+@keyframes skyTwinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+.sky-celestial {
+  position: absolute;
+  inset: 0;
+}
+
+.sky-sun,
+.sky-moon {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+
+.sky-sun {
+  background: radial-gradient(circle at 40% 36%, #fff7d6 0%, #ffd97a 58%, rgba(255, 200, 110, 0) 74%);
+  box-shadow: 0 0 26px rgba(255, 205, 120, 0.55);
+}
+
+.sky-moon {
+  background: radial-gradient(circle at 38% 34%, #ffffff 0%, #cfdaf0 62%, rgba(180, 195, 225, 0) 76%);
+  box-shadow: 0 0 22px rgba(190, 205, 235, 0.5);
+}
+
+body[data-sky="dawn"] .sky-sun,
+body[data-sky="day"] .sky-sun,
+body[data-sky="dusk"] .sky-sun { opacity: 0.85; }
+
+body[data-sky="night"] .sky-moon { opacity: 0.85; }
+
+.sky-clouds {
+  position: absolute;
+  inset: 0;
+}
+
+.cloud {
+  position: absolute;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  filter: blur(6px);
+  opacity: 0;
+  transition: opacity 1.4s ease;
+  animation-name: skyDrift;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes skyDrift {
+  from { transform: translateX(-40%); }
+  to { transform: translateX(460%); }
+}
+
+body[data-sky="day"] .cloud { opacity: 0.5; }
+body[data-sky="dawn"] .cloud { opacity: 0.4; }
+body[data-sky="dusk"] .cloud { opacity: 0.35; }
+body[data-sky="night"] .cloud { opacity: 0.12; }
+
+.sky-city {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 46%;
+  opacity: var(--city-opacity);
+  transition: opacity 1.2s ease;
+}
+
+.building {
+  position: absolute;
+  bottom: 0;
+  background: var(--city);
+  display: grid;
+  grid-auto-rows: 5px;
+  gap: 3px;
+  padding: 5px 4px;
+  align-content: start;
+  box-sizing: border-box;
+}
+
+.win {
+  width: 100%;
+  height: 100%;
+  border-radius: 1px;
+  background: var(--win);
+  opacity: 0.12;
+  transition: opacity 0.8s ease;
+}
+
+body[data-sky="night"] .win,
+body[data-sky="dusk"] .win,
+body[data-sky="dawn"] .win {
+  animation: skyWinBlink var(--blink-dur, 9s) ease-in-out infinite;
+  animation-delay: var(--blink-delay, 0s);
+}
+
+/* Part of the windows simply stay lit, so the city reads as lived-in rather
+   than a uniformly flashing grid (and fewer elements animate at once). */
+body[data-sky="night"] .win.win-steady,
+body[data-sky="dusk"] .win.win-steady,
+body[data-sky="dawn"] .win.win-steady {
+  animation: none;
+  opacity: var(--steady, 0.55);
+}
+
+@keyframes skyWinBlink {
+  0%, 100% { opacity: 0.12; }
+  42% { opacity: 0.9; }
+  58% { opacity: 0.65; }
+  76% { opacity: 0.25; }
+}
+
+/* ============================
    Header
    ============================ */
 .header-bar {
