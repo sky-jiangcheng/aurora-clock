@@ -350,6 +350,16 @@ function setWeatherStatus(message) {
   setText('weatherStatus', message || '');
 }
 
+// Turns a fetch failure into something a user (or a bug report) can act on.
+// A bare "failed" hides the one distinction that matters: whether the request
+// never left (offline, blocked by permissions, DNS) or came back rejected.
+function describeError(err) {
+  if (!err) return 'unknown error';
+  if (err.name === 'AbortError') return 'timed out after ' + Math.round(WEATHER_TIMEOUT / 1000) + 's';
+  if (err instanceof TypeError) return 'network blocked or offline';
+  return err.message || String(err);
+}
+
 // ---- Weather ----
 // Data source: Open-Meteo forecast + geocoding (both keyless, CORS enabled).
 
@@ -744,12 +754,12 @@ function loadWeather(coords, statusText) {
       return cache.data;
     }
 
-    return fetchWeather(target).catch(function() {
+    return fetchWeather(target).catch(function(err) {
       if (cache && cache.data) {
         setWeatherStatus('Offline - showing last update');
         return cache.data;
       }
-      setWeatherStatus('Weather unavailable - retry or pick another city');
+      setWeatherStatus('Weather unavailable: ' + describeError(err));
       return null;
     });
   });
@@ -762,8 +772,8 @@ function refreshWeather() {
     return;
   }
   setWeatherStatus('Refreshing...');
-  fetchWeather(coords).catch(function() {
-    setWeatherStatus('Refresh failed - showing last update');
+  fetchWeather(coords).catch(function(err) {
+    setWeatherStatus('Refresh failed: ' + describeError(err));
   });
 }
 
@@ -774,7 +784,7 @@ function locateWeather() {
   }).catch(function(err) {
     setWeatherStatus(err && err.code === 1
       ? 'Location denied - search for a city instead'
-      : 'Location unavailable - search for a city instead');
+      : 'Location unavailable: ' + describeError(err));
   });
 }
 
@@ -834,9 +844,11 @@ function setupCitySearch() {
         ? 'Pick a city'
         : 'No matching city');
       if (!results.length) input.select();
-    }).catch(function() {
+    }).catch(function(err) {
       renderCityResults([]);
-      setWeatherStatus('City search failed');
+      // Surface the real cause: a blocked or failed request is not the same
+      // thing as "this city does not exist", and the two must not look alike.
+      setWeatherStatus('Search failed: ' + describeError(err));
     });
   }
 
