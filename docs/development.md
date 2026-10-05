@@ -24,7 +24,8 @@ Everything else is derived:
 
    ```bash
    cd aurora-clock && zip -r -X ../aurora-clock.zip \
-     manifest.json popup.html popup.js styles.css options.html options.js LICENSE icons/ \
+     manifest.json popup.html popup.js styles.css options.html options.js \
+     background.js offscreen.html offscreen.js LICENSE icons/ \
      -x "*.DS_Store"
    ```
 
@@ -71,7 +72,16 @@ rm -rf /tmp/ac-check
 
 Two independent causes, both seen in practice:
 
-**Location prompt kills the popup.** Requesting geolocation from inside a popup makes Chrome close that popup, aborting the request. Never call `getCurrentPosition()` during popup open — the current code deliberately loads only cached data on open, and geolocation is user-initiated via the locate button. A geolocation prompt closing the popup once is expected Chrome behaviour, not a bug; the cached result still renders afterwards.
+**Location prompt kills the popup.** Requesting geolocation from inside a popup makes Chrome close that popup, aborting the request. Because of this the popup **never** calls `navigator.geolocation`. Instead `background.js` (the MV3 service worker) takes the fix, using `offscreen.html` / `offscreen.js` — the one MV3 context that has a `document` and therefore `navigator.geolocation`. The flow is:
+
+```
+popup opens -> background.js -> cached coordinates from chrome.storage.local
+                                -> instant paint, no prompt
+"Use my location" clicked, or install-time warm-up
+             -> background.js -> offscreen document -> getCurrentPosition() -> closed again
+```
+
+Because the permission prompt only appears **once**, and only outside the popup, the popup survives every later request. `chrome.storage.local` key `lastLocation` holds the last good fix; the popup reads it on open and never triggers a grant by itself.
 
 **A missing host permission returns a silent failure.** `fetch` rejects without a useful message when the manifest omits the origin. The code calls exactly two endpoints, and both must be declared:
 

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Aurora Clock geolocation bridge</title>
+</head>
+<body>
+  <!--
+    Offscreen document: exists only to provide a DOM context for
+    navigator.geolocation, which does not exist in the MV3 service worker.
+    It renders nothing and is torn down right after each fix.
+  -->
+  <script src="offscreen.js"></script>
+</body>
+</html>

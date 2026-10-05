@@ -24,7 +24,8 @@
 
    ```bash
    cd aurora-clock && zip -r -X ../aurora-clock.zip \
-     manifest.json popup.html popup.js styles.css options.html options.js LICENSE icons/ \
+     manifest.json popup.html popup.js styles.css options.html options.js \
+     background.js offscreen.html offscreen.js LICENSE icons/ \
      -x "*.DS_Store"
    ```
 
@@ -71,7 +72,16 @@ rm -rf /tmp/ac-check
 
 有两个独立的成因，实践中都遇到过：
 
-**定位权限弹窗会杀掉弹窗。** 在弹窗内请求地理位置会让 Chrome 直接关闭该弹窗，请求随之中断。绝不要在弹窗打开时调用 `getCurrentPosition()` —— 现有代码刻意只在打开时加载缓存数据，定位是用户主动点定位按钮才触发。首次定位时弹窗被关闭一次属于 Chrome 的正常行为，不是 bug；之后重新打开，天气仍会用缓存正常渲染。
+**定位权限弹窗会杀掉弹窗。** 在弹窗内请求地理位置会让 Chrome 直接关闭该弹窗，请求随之中断。因此弹窗**从不**调用 `navigator.geolocation`，定位改由 `background.js`（MV3 service worker）执行，并通过 `offscreen.html` / `offscreen.js` 取坐标 —— 这是 MV3 里唯一拥有 `document`、因而拥有 `navigator.geolocation` 的上下文。调用链：
+
+```
+弹窗打开 -> background.js -> 读 chrome.storage.local 里的缓存坐标
+                              -> 立即渲染，不弹权限
+点「Use my location」，或安装后自动预热
+         -> background.js -> offscreen 文档 -> getCurrentPosition() -> 用完即关
+```
+
+因为权限提示**只出现一次**，且发生在弹窗之外，所以此后每次定位都不会再关掉弹窗。最后一次成功坐标存在 `chrome.storage.local` 的 `lastLocation`；弹窗打开时只读它，自己绝不触发授权。
 
 **缺少主机权限会表现为静默失败。** manifest 里没声明某个源时，`fetch` 会直接 reject 且不给有用的报错信息。代码只调用两个端点，两个都必须在 manifest 中声明：
 

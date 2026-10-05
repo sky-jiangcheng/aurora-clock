@@ -700,27 +700,67 @@ function geocodeCity(name) {
   });
 }
 
-// ---- Geolocation (opt-in only: never on popup open) ----
+// ---- Geolocation (routed through the background worker) ----
+//
+// The popup must never call navigator.geolocation itself: the permission
+// prompt closes the popup and aborts the call. The service worker owns the
+// fix instead, so a grant never lands inside the popup's lifetime. See
+// background.js for the offscreen-document bridge.
 
-function getCurrentPosition() {
-  return new Promise(function(resolve, reject) {
-    if (!navigator.geolocation) {
-      reject(new Error('Geolocation unavailable'));
-      return;
+function hasBackgroundWorker() {
+  return typeof chrome !== 'undefined' && !!chrome.runtime && !!chrome.runtime.id
+    && typeof chrome.runtime.sendMessage === 'function';
+}
+
+// Cached coordinates the worker already stored. Returns null on first run.
+function readWorkerLocation() {
+  if (!hasBackgroundWorker()) return Promise.resolve(null);
+
+  return new Promise(function(resolve) {
+    try {
+      chrome.runtime.sendMessage({ type: 'get-location' }, function(res) {
+        // Reading chrome.runtime.lastError stops Chrome logging an unchecked
+        // error when the worker is asleep or the extension is reloading.
+        void chrome.runtime.lastError;
+        resolve(res && res.cached ? res.cached : null);
+      });
+    } catch (e) {
+      resolve(null);
     }
-    navigator.geolocation.getCurrentPosition(resolve, reject, {
-      enableHighAccuracy: false,
-      timeout: 8000,
-      maximumAge: 15 * 60 * 1000
-    });
   });
 }
 
+// Ask the worker for a fresh fix. This is the only path that can trigger the
+// permission grant, which is why it is never called during popup open.
 function requestGeolocation() {
-  return getCurrentPosition().then(function(position) {
-    var lat = position.coords.latitude;
-    var lon = position.coords.longitude;
-    return { lat: lat, lon: lon, label: formatCoordShort(lat, lon) };
+  if (!hasBackgroundWorker()) {
+    return Promise.reject(new Error('Background worker unavailable'));
+  }
+
+  return new Promise(function(resolve, reject) {
+    try {
+      chrome.runtime.sendMessage({ type: 'refresh-location' }, function(res) {
+        void chrome.runtime.lastError;
+        if (!res) {
+          reject(new Error('No response from background worker'));
+          return;
+        }
+        if (!res.ok || !res.location) {
+          var err = new Error(res.error || 'Location unavailable');
+          // PERMISSION_DENIED === 1; the popup words this differently.
+          err.code = res.code;
+          reject(err);
+          return;
+        }
+        resolve({
+          lat: res.location.lat,
+          lon: res.location.lon,
+          label: formatCoordShort(res.location.lat, res.location.lon)
+        });
+      });
+    } catch (e) {
+      reject(new Error('Background worker unavailable'));
+    }
   });
 }
 
@@ -785,6 +825,23 @@ function locateWeather() {
     setWeatherStatus(err && err.code === 1
       ? 'Location denied - search for a city instead'
       : 'Location unavailable: ' + describeError(err));
+  });
+}
+
+// Paint cached coordinates on open, then quietly refresh in the background.
+//
+// The refresh is only allowed to reach the network and repaint. If it needs a
+// permission grant the worker will be denied or the popup will go away, and
+// either way the already-painted cached weather stays on screen.
+function autoLocateWeather() {
+  return readWorkerLocation().then(function(cached) {
+    if (cached) {
+      weatherState.coords = { lat: cached.lat, lon: cached.lon, label: formatCoordShort(cached.lat, cached.lon) };
+      return loadWeather(weatherState.coords, '');
+    }
+    // Nothing cached yet: show the cached forecast (if any) and let the user
+    // decide about location. Never auto-grant.
+    return loadWeather(null, '');
   });
 }
 
@@ -1197,9 +1254,9 @@ function init() {
 
   // Unit first so the first weather paint already uses the right scale.
   setupUnitToggle().then(function() {
-    // No geolocation on open: the permission prompt closes the popup.
-    // Only cached / previously selected city data is used here.
-    return loadWeather(null, '');
+    // Cached coordinates only. Requesting a fix here could raise the
+    // permission prompt, which closes the popup and aborts everything.
+    return autoLocateWeather();
   });
 
   setupCitySearch();
