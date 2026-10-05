@@ -12,9 +12,9 @@ Current version: **1.4.0**
 | :---: | :---: | :---: |
 | ![Classic dial](docs/screenshots/clock-classic.png) | ![Neon dial](docs/screenshots/clock-neon.png) | ![Ocean dial](docs/screenshots/clock-ocean.png) |
 
-| Light mode | World clock |
-| :---: | :---: |
-| ![Light mode](docs/screenshots/clock-light.png) | ![World clock](docs/screenshots/world.png) |
+| Light mode | World clock | Weather |
+| :---: | :---: | :---: |
+| ![Light mode](docs/screenshots/clock-light.png) | ![World clock](docs/screenshots/world.png) | ![Weather](docs/screenshots/weather.png) |
 
 ## Features
 
@@ -122,7 +122,7 @@ Full policy: [Privacy Policy](docs/privacy-policy.md)
 │   ├── privacy-policy.zh-CN.md # Privacy policy (Simplified Chinese)
 │   ├── development.md          # Build and deploy workflow (English)
 │   ├── development.zh-CN.md    # Build and deploy workflow (Simplified Chinese)
-│   ├── screenshots/            # Popup screenshots (420x420)
+│   ├── screenshots/            # Popup screenshots (1120x1120, 2x)
 │   └── store/                  # Chrome Web Store assets (1280x800)
 ├── aurora-clock.zip    # Release artifact, built from source
 ├── aurora-clock/       # Unpacked copy of the zip; gitignored, not source

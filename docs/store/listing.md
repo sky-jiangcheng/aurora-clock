@@ -108,3 +108,26 @@ Aurora Clock does not use remote code. All HTML, CSS, and JavaScript is included
 | `docs/store/clock-light-1280x800.png` | Classic dial, light theme |
 | `docs/store/world-1280x800.png` | World clock tab |
 | `docs/store/weather-1280x800.png` | Weather tab |
+
+Each frame shows the real popup at its natural 560x560 size, centred on a
+1280x800 backdrop carrying the theme's own palette — never the popup stretched
+to fill the canvas, which would distort the dial.
+
+To regenerate after a UI change:
+
+```bash
+node test/make-shots.js      # build the screenshot harness
+# Chrome must already be listening for CDP:
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --headless --disable-gpu --remote-debugging-port=9223 \
+  --user-data-dir=/tmp/cdp-prof about:blank &
+node test/capture.js         # docs/screenshots/ (1120x1120, 2x)
+node test/capture-store.js   # docs/store/ (1280x800, 1x)
+node test/verify-shots.js    # pixel-level assertions on the output
+```
+
+The harness freezes the clock at 10:09:30 and stubs the weather response, so
+every run is byte-comparable. `capture.js` waits for the harness to signal that
+the requested tab actually rendered and re-asserts the active tab before each
+capture; `chrome --headless --screenshot` alone cannot be trusted for this, as
+it may capture before the page settles.

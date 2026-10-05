@@ -12,9 +12,9 @@
 | :---: | :---: | :---: |
 | ![经典表盘](docs/screenshots/clock-classic.png) | ![霓虹表盘](docs/screenshots/clock-neon.png) | ![海洋表盘](docs/screenshots/clock-ocean.png) |
 
-| 浅色模式 | 世界时钟 |
-| :---: | :---: |
-| ![浅色模式](docs/screenshots/clock-light.png) | ![世界时钟](docs/screenshots/world.png) |
+| 浅色模式 | 世界时钟 | 天气 |
+| :---: | :---: | :---: |
+| ![浅色模式](docs/screenshots/clock-light.png) | ![世界时钟](docs/screenshots/world.png) | ![天气](docs/screenshots/weather.png) |
 
 ## 功能特性
 
@@ -122,7 +122,7 @@
 │   ├── privacy-policy.zh-CN.md # 隐私政策（简体中文）
 │   ├── development.md          # 打包与部署流程（英文）
 │   ├── development.zh-CN.md    # 打包与部署流程（简体中文）
-│   ├── screenshots/            # 弹窗截图（420x420）
+│   ├── screenshots/            # 弹窗截图（1120x1120，2x）
 │   └── store/                  # Chrome 应用商店素材（1280x800）
 ├── aurora-clock.zip    # 发布产物，由源码打包而来
 ├── aurora-clock/       # zip 的解压副本；已 gitignore，不是源码
