@@ -7,7 +7,73 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Weather icon sprite: themed via currentColor, no emoji font dependency -->
+  <svg width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="wx-sun" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="13" fill="currentColor"/>
+        <g stroke="currentColor" stroke-width="3.4" stroke-linecap="round">
+          <path d="M32 6v7M32 51v7M6 32h7M51 32h7M13.6 13.6l5 5M45.4 45.4l5 5M50.4 13.6l-5 5M18.6 45.4l-5 5"/>
+        </g>
+      </symbol>
+      <symbol id="wx-moon" viewBox="0 0 64 64">
+        <path fill="currentColor" d="M40 8a24 24 0 1 0 16 42A26 26 0 0 1 40 8z"/>
+      </symbol>
+      <symbol id="wx-cloud-sun" viewBox="0 0 64 64">
+        <g fill="currentColor" opacity="0.75">
+          <circle cx="24" cy="22" r="9"/>
+          <g stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
+            <path d="M24 5v4M24 35v4M7 22h4M37 22h4M11.7 9.7l2.8 2.8M33.5 31.5l2.8 2.8M36.3 9.7l-2.8 2.8"/>
+          </g>
+        </g>
+        <path fill="currentColor" d="M24 54a13 13 0 0 1 1-26 17 17 0 0 1 32 4 11 11 0 0 1-2 22z"/>
+      </symbol>
+      <symbol id="wx-cloud-moon" viewBox="0 0 64 64">
+        <path fill="currentColor" opacity="0.75" d="M30 5a16 16 0 1 0 11 28A18 18 0 0 1 30 5z"/>
+        <path fill="currentColor" d="M24 54a13 13 0 0 1 1-26 17 17 0 0 1 32 4 11 11 0 0 1-2 22z"/>
+      </symbol>
+      <symbol id="wx-cloud" viewBox="0 0 64 64">
+        <path fill="currentColor" d="M18 54a14 14 0 0 1 1-28 19 19 0 0 1 36 4 12 12 0 0 1-2 24z"/>
+      </symbol>
+      <symbol id="wx-fog" viewBox="0 0 64 64">
+        <path fill="currentColor" opacity="0.85" d="M18 42a14 14 0 0 1 1-28 19 19 0 0 1 36 4 12 12 0 0 1-2 24z"/>
+        <g stroke="currentColor" stroke-width="3.4" stroke-linecap="round" opacity="0.75">
+          <path d="M12 50h40M18 58h30"/>
+        </g>
+      </symbol>
+      <symbol id="wx-drizzle" viewBox="0 0 64 64">
+        <path fill="currentColor" d="M18 40a14 14 0 0 1 1-28 19 19 0 0 1 36 4 12 12 0 0 1-2 24z"/>
+        <g stroke="currentColor" stroke-width="3.2" stroke-linecap="round" opacity="0.85">
+          <path d="M21 48v5M32 48v5M43 48v5"/>
+        </g>
+      </symbol>
+      <symbol id="wx-rain" viewBox="0 0 64 64">
+        <path fill="currentColor" d="M18 38a14 14 0 0 1 1-28 19 19 0 0 1 36 4 12 12 0 0 1-2 24z"/>
+        <g stroke="currentColor" stroke-width="3.2" stroke-linecap="round" opacity="0.85">
+          <path d="M22 46l-3 8M33 46l-3 8M44 46l-3 8"/>
+        </g>
+      </symbol>
+      <symbol id="wx-snow" viewBox="0 0 64 64">
+        <path fill="currentColor" d="M18 38a14 14 0 0 1 1-28 19 19 0 0 1 36 4 12 12 0 0 1-2 24z"/>
+        <g stroke="currentColor" stroke-width="2.8" stroke-linecap="round" opacity="0.85">
+          <path d="M21 46v8M17.5 48l7 4M24.5 48l-7 4M42 46v8M38.5 48l7 4M45.5 48l-7 4"/>
+        </g>
+      </symbol>
+      <symbol id="wx-sleet" viewBox="0 0 64 64">
+        <path fill="currentColor" d="M18 38a14 14 0 0 1 1-28 19 19 0 0 1 36 4 12 12 0 0 1-2 24z"/>
+        <g stroke="currentColor" stroke-width="3.2" stroke-linecap="round" opacity="0.85">
+          <path d="M23 46l-3 8M41 46v8M37.5 48l7 4M44.5 48l-7 4"/>
+        </g>
+      </symbol>
+      <symbol id="wx-thunder" viewBox="0 0 64 64">
+        <path fill="currentColor" d="M18 36a14 14 0 0 1 1-28 19 19 0 0 1 36 4 12 12 0 0 1-2 24z"/>
+        <path fill="currentColor" d="M33 42l-11 14h7l-3 12 12-15h-7z"/>
+      </symbol>
+    </defs>
+  </svg>
+
   <div class="clock-container">
+    <!-- Ambience only: the content scrim below guarantees text contrast -->
     <div class="skyline" id="skyline" aria-hidden="true">
       <div class="sky"></div>
       <div class="sky-stars" id="skyStars"></div>
@@ -18,30 +84,33 @@
       <div class="sky-clouds" id="skyClouds"></div>
       <div class="sky-city" id="skyCity"></div>
     </div>
+    <div class="content-scrim" aria-hidden="true"></div>
+
     <div class="header-bar">
-      <div class="style-selector">
-        <div class="style-dot active" data-style="classic"></div>
-        <div class="style-dot" data-style="modern"></div>
-        <div class="style-dot" data-style="minimal"></div>
-        <div class="style-dot" data-style="vintage"></div>
-        <div class="style-dot" data-style="neon"></div>
-        <div class="style-dot" data-style="ocean"></div>
+      <div class="style-selector" role="radiogroup" aria-label="Dial style">
+        <div class="style-dot active" data-style="classic" role="radio" aria-checked="true" tabindex="0" title="Classic"></div>
+        <div class="style-dot" data-style="modern" role="radio" aria-checked="false" tabindex="-1" title="Modern"></div>
+        <div class="style-dot" data-style="minimal" role="radio" aria-checked="false" tabindex="-1" title="Minimal"></div>
+        <div class="style-dot" data-style="vintage" role="radio" aria-checked="false" tabindex="-1" title="Vintage"></div>
+        <div class="style-dot" data-style="neon" role="radio" aria-checked="false" tabindex="-1" title="Neon"></div>
+        <div class="style-dot" data-style="ocean" role="radio" aria-checked="false" tabindex="-1" title="Ocean"></div>
       </div>
       <div class="header-right">
+        <button class="icon-btn" id="unitToggle" title="Toggle temperature unit">°C</button>
         <button class="format-toggle" id="formatToggle" title="Toggle 12/24-hour format">24H</button>
-        <button class="mode-toggle" id="modeToggle" title="Toggle dark/light mode">
+        <button class="mode-toggle" id="modeToggle" title="Toggle dark/light mode" aria-label="Toggle dark/light mode">
           <span class="mode-icon-dark"></span>
           <span class="mode-icon-light"></span>
         </button>
-        <div class="tab-switch">
-          <button class="tab-btn active" data-tab="clock">Clock</button>
-          <button class="tab-btn" data-tab="world">World</button>
-          <button class="tab-btn" data-tab="weather">Weather</button>
+        <div class="tab-switch" role="tablist" aria-label="Views">
+          <button class="tab-btn active" data-tab="clock" role="tab" aria-selected="true" aria-controls="tab-clock">Clock</button>
+          <button class="tab-btn" data-tab="world" role="tab" aria-selected="false" aria-controls="tab-world">World</button>
+          <button class="tab-btn" data-tab="weather" role="tab" aria-selected="false" aria-controls="tab-weather">Weather</button>
         </div>
       </div>
     </div>
 
-    <div class="tab-view active" id="tab-clock">
+    <div class="tab-view active" id="tab-clock" role="tabpanel">
       <div class="main-content">
         <div class="clock-face">
           <div class="clock-dial">
@@ -67,21 +136,40 @@
       </div>
     </div>
 
-    <div class="tab-view" id="tab-world">
+    <div class="tab-view" id="tab-world" role="tabpanel">
       <div class="world-page">
         <div class="world-list" id="worldList"></div>
       </div>
     </div>
 
-    <div class="tab-view" id="tab-weather">
+    <div class="tab-view" id="tab-weather" role="tabpanel">
       <div class="weather-page">
-        <div class="weather-hero">
-          <div class="weather-icon-large" id="weatherIconLarge"></div>
-          <div class="weather-temp-large" id="weatherTempLarge">--</div>
-          <div class="weather-desc-large" id="weatherDescLarge">--</div>
-          <div class="weather-feels" id="weatherFeels">--</div>
-          <div class="weather-status" id="weatherStatus"></div>
+
+        <div class="wx-searchbar">
+          <input type="text" id="cityInput" class="wx-input" placeholder="Search city" autocomplete="off" spellcheck="false" aria-label="Search city">
+          <button class="wx-btn" id="citySearchBtn" title="Search">Search</button>
+          <button class="wx-btn wx-btn-icon" id="wxLocateBtn" title="Use my location">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm9 3h-2.07A7.02 7.02 0 0 0 13 5.07V3a1 1 0 1 0-2 0v2.07A7.02 7.02 0 0 0 5.07 11H3a1 1 0 1 0 0 2h2.07A7.02 7.02 0 0 0 11 18.93V21a1 1 0 1 0 2 0v-2.07A7.02 7.02 0 0 0 18.93 13H21a1 1 0 1 0 0-2z"/></svg>
+          </button>
+          <div class="wx-results" id="cityResults" hidden></div>
         </div>
+
+        <div class="weather-hero">
+          <div class="weather-place" id="wdLocation">--</div>
+          <div class="wx-hero-main">
+            <svg class="weather-icon-large" id="weatherIconLarge" viewBox="0 0 64 64" aria-hidden="true"><use href="#wx-cloud"></use></svg>
+            <div class="wx-hero-text">
+              <div class="weather-temp-large" id="weatherTempLarge">--</div>
+              <div class="weather-desc-large" id="weatherDescLarge">--</div>
+              <div class="weather-range" id="weatherRange">--</div>
+            </div>
+          </div>
+          <div class="weather-feels" id="weatherFeels"></div>
+          <div class="weather-status" id="weatherStatus" role="status" aria-live="polite"></div>
+        </div>
+
+        <div class="wx-hourly" id="wxHourly" aria-label="Hourly forecast"></div>
+
         <div class="weather-details-grid">
           <div class="detail-card">
             <span class="dc-label">Humidity</span>
@@ -92,16 +180,20 @@
             <span class="dc-value" id="wdWind">--</span>
           </div>
           <div class="detail-card">
+            <span class="dc-label">Feels</span>
+            <span class="dc-value" id="wdFeels">--</span>
+          </div>
+          <div class="detail-card">
+            <span class="dc-label">UV Index</span>
+            <span class="dc-value" id="wdUv">--</span>
+          </div>
+          <div class="detail-card">
             <span class="dc-label">Pressure</span>
             <span class="dc-value" id="wdPressure">--</span>
           </div>
           <div class="detail-card">
             <span class="dc-label">Visibility</span>
             <span class="dc-value" id="wdVisibility">--</span>
-          </div>
-          <div class="detail-card">
-            <span class="dc-label">UV Index</span>
-            <span class="dc-value" id="wdUv">--</span>
           </div>
           <div class="detail-card">
             <span class="dc-label">Sunrise</span>
@@ -111,11 +203,16 @@
             <span class="dc-label">Sunset</span>
             <span class="dc-value" id="wdSunset">--</span>
           </div>
-          <div class="detail-card">
-            <span class="dc-label">Location</span>
-            <span class="dc-value" id="wdLocation">--</span>
-          </div>
         </div>
+
+        <div class="wx-forecast" id="wxForecast" aria-label="Daily forecast"></div>
+
+        <div class="wx-footer">
+          <span class="wx-updated" id="wxUpdated"></span>
+          <button class="wx-link" id="wxRefreshBtn" title="Refresh weather">Refresh</button>
+          <button class="wx-link" id="wxOptionsBtn" title="Open settings">Settings</button>
+        </div>
+
       </div>
     </div>
   </div>

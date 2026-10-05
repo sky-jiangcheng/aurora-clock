@@ -97,7 +97,7 @@ body.light {
   background: var(--bg-container);
   border-radius: 0;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
-  padding: 24px 26px 26px;
+  padding: 20px 22px 22px;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -144,20 +144,43 @@ body.light {
    Skyline background
    ============================ */
 body {
-  --sky-opacity: 0.42;
-  --city-opacity: 0.6;
-  --stars-opacity: 0.9;
+  --sky-opacity: 0.72;
+  --city-opacity: 0.85;
+  --stars-opacity: 0.85;
   --sky-top: #05070f;
   --sky-mid: #0d1428;
   --sky-bottom: #1b2440;
   --city: #03050c;
   --win: #ffd9a0;
+  /* Scrim keeps foreground text readable no matter what the sky is doing.
+     Without it the city silhouette shows straight through the panels. */
+  --scrim: linear-gradient(180deg, rgba(7,7,12,0.42) 0%, rgba(7,7,12,0.62) 55%, rgba(7,7,12,0.74) 100%);
+  --panel-solid: rgba(16,16,25,0.9);
+  --card-solid: rgba(22,22,33,0.86);
 }
 
 body.light {
-  --sky-opacity: 0.2;
-  --city-opacity: 0.26;
-  --stars-opacity: 0.35;
+  --sky-opacity: 0.5;
+  --city-opacity: 0.28;
+  --stars-opacity: 0;
+  --sky-top: #7ba7d4;
+  --sky-mid: #b9d3ea;
+  --sky-bottom: #f0e6d8;
+  --city: #5f7186;
+  --win: #ffffff;
+  /* Light mode needs a light scrim, otherwise the dark sky text wins. */
+  --scrim: linear-gradient(180deg, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0.78) 55%, rgba(255,255,255,0.88) 100%);
+  --panel-solid: rgba(255,255,255,0.9);
+  --card-solid: rgba(255,255,255,0.88);
+}
+
+.content-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--scrim);
+  pointer-events: none;
+  transition: background 1.2s ease;
 }
 
 body[data-sky="dawn"] {
@@ -344,32 +367,37 @@ body[data-sky="dawn"] .win.win-steady {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 18px;
+  gap: 12px;
+  margin-bottom: 14px;
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  flex: none;
 }
 
 .header-right {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
 }
 
 /* ---- Style dots ---- */
 .style-selector {
   display: flex;
   gap: 7px;
-  opacity: 0.35;
+  padding: 4px 2px;
+  opacity: 0.4;
   transition: opacity 0.4s ease;
+  border-radius: 8px;
 }
 
-.style-selector:hover {
+.style-selector:hover,
+.style-selector:focus-within {
   opacity: 1;
 }
 
 .style-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--marker);
   cursor: pointer;
@@ -381,12 +409,39 @@ body[data-sky="dawn"] .win.win-steady {
   transform: scale(1.3);
 }
 
+.style-dot:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 .style-dot.active {
   background: var(--accent);
-  width: 6px;
-  height: 6px;
-  transform: scale(1);
+  transform: scale(1.15);
   box-shadow: 0 0 7px var(--accent-glow);
+}
+
+/* ---- Shared small icon button (unit toggle) ---- */
+.icon-btn {
+  height: 24px;
+  min-width: 30px;
+  padding: 0 7px;
+  border-radius: 12px;
+  border: 1px solid var(--bg-card-b);
+  background: var(--card-solid);
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-family: inherit;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.icon-btn:hover {
+  opacity: 1;
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 /* ---- Mode toggle ---- */
@@ -477,15 +532,15 @@ body[data-sky="dawn"] .win.win-steady {
 .tab-switch {
   display: flex;
   background: var(--bg-switch);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 2px;
-  opacity: 0.55;
+  opacity: 0.75;
   transition: opacity 0.35s ease;
 }
 
-.tab-switch:hover {
-  opacity: 0.85;
-}
+.tab-switch:hover { opacity: 1; }
 
 .tab-btn {
   border: none;
@@ -502,9 +557,14 @@ body[data-sky="dawn"] .win.win-steady {
   text-transform: uppercase;
 }
 
+.tab-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 .tab-btn.active {
-  background: var(--bg-card);
-  color: var(--text-secondary);
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
   box-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
 
@@ -528,19 +588,25 @@ body[data-sky="dawn"] .win.win-steady {
 .main-content {
   flex: 1;
   display: flex;
-  gap: 20px;
+  gap: 18px;
+  align-items: center;
+  min-height: 0;
 }
 
 .clock-face {
-  flex: 1.1;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex: none;
 }
 
-/* ---- Dial ---- */
+/* ---- Dial ----
+   --dial is the single source of truth: hands, markers and the responsive
+   breakpoint all derive from it. Overriding width/height without updating it
+   desynchronises hand length and marker rotation origins. */
 .clock-dial {
   --dial: 240px;
+  --dial-r: calc(var(--dial) / 2);
   width: var(--dial);
   height: var(--dial);
   background: var(--bg-dial);
@@ -549,6 +615,10 @@ body[data-sky="dawn"] .win.win-steady {
   box-shadow: var(--bg-dial-shadow);
   position: relative;
   overflow: hidden;
+  flex: none;
+  /* The dial floats above the skyline, so it needs to lift off the city. */
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .clock-dial::before {
@@ -583,21 +653,16 @@ body[data-sky="dawn"] .win.win-steady {
 /* ---- Hour markers ---- */
 .hour-marker {
   position: absolute;
-  top: 17px;
+  top: calc(var(--dial) * 0.071);
   left: 50%;
   width: 1px;
-  height: 13px;
+  height: calc(var(--dial) * 0.054);
+  margin-left: -0.5px;
   background: var(--marker);
-  transform-origin: 50% calc(var(--dial) / 2 - 17px);
+  /* Rotate about the dial centre, not the marker's own centre. */
+  transform-origin: 50% calc(var(--dial-r) - var(--dial) * 0.071);
+  transform: rotate(var(--rot, 0deg));
   z-index: 1;
-}
-
-.hour-marker.major {
-  width: 1.5px;
-  height: 21px;
-  top: 14px;
-  background: var(--marker-major);
-  transform-origin: 50% calc(var(--dial) / 2 - 14px);
 }
 
 /* ---- Center ---- */
@@ -614,16 +679,19 @@ body[data-sky="dawn"] .win.win-steady {
   box-shadow: 0 0 8px var(--accent-glow);
 }
 
-/* ---- Hands ---- */
+/* ---- Hands ----
+   Positioned by bottom-anchored rotation: no translate() in JS, so the
+   update loop only ever writes a rotate. */
 .hour-hand {
   position: absolute;
-  top: 50%;
+  bottom: 50%;
   left: 50%;
   width: 3px;
   height: calc(var(--dial) * 0.28);
+  margin-left: -1.5px;
   background: var(--hour-hand);
-  transform-origin: bottom center;
-  transform: translate(-50%, -100%);
+  transform-origin: 50% 100%;
+  transform: rotate(0deg);
   border-radius: 1.5px 1.5px 0 0;
   will-change: transform;
 }
@@ -643,13 +711,14 @@ body[data-sky="dawn"] .win.win-steady {
 
 .minute-hand {
   position: absolute;
-  top: 50%;
+  bottom: 50%;
   left: 50%;
   width: 2px;
   height: calc(var(--dial) * 0.378);
+  margin-left: -1px;
   background: var(--minute-hand);
-  transform-origin: bottom center;
-  transform: translate(-50%, -100%);
+  transform-origin: 50% 100%;
+  transform: rotate(0deg);
   border-radius: 1px 1px 0 0;
   will-change: transform;
 }
@@ -669,13 +738,14 @@ body[data-sky="dawn"] .win.win-steady {
 
 .second-hand {
   position: absolute;
-  top: 50%;
+  bottom: 50%;
   left: 50%;
   width: 1px;
   height: calc(var(--dial) * 0.42);
+  margin-left: -0.5px;
   background: var(--second-hand);
-  transform-origin: bottom center;
-  transform: translate(-50%, -100%);
+  transform-origin: 50% 100%;
+  transform: rotate(0deg);
   border-radius: 0.5px;
   z-index: 5;
   will-change: transform;
@@ -704,65 +774,75 @@ body[data-sky="dawn"] .win.win-steady {
 
 .number {
   position: absolute;
-  font-size: 18px;
+  font-size: calc(var(--dial) * 0.075);
   font-weight: 400;
   color: var(--marker-major);
   transform: translate(-50%, -50%);
   letter-spacing: 0.5px;
 }
 
-.number:nth-child(1) { top: 26px; left: 50%; }
-.number:nth-child(2) { top: 50%; right: 24px; transform: translate(50%, -50%); }
-.number:nth-child(3) { bottom: 24px; left: 50%; transform: translate(-50%, 50%); }
-.number:nth-child(4) { top: 50%; left: 24px; transform: translate(-50%, -50%); }
+.number:nth-child(1) { top: calc(var(--dial) * 0.108); left: 50%; }
+.number:nth-child(2) { top: 50%; right: calc(var(--dial) * 0.1); transform: translate(50%, -50%); }
+.number:nth-child(3) { bottom: calc(var(--dial) * 0.1); left: 50%; transform: translate(-50%, 50%); }
+.number:nth-child(4) { top: 50%; left: calc(var(--dial) * 0.1); transform: translate(-50%, -50%); }
 
 /* ---- Brand ---- */
 .dial-brand {
   position: absolute;
-  bottom: 58px;
+  bottom: calc(var(--dial) * 0.135);
   left: 50%;
   transform: translateX(-50%);
-  font-size: 10px;
+  font-size: calc(var(--dial) * 0.036);
   font-weight: 500;
   letter-spacing: 2.5px;
   color: var(--text-brand);
   z-index: 2;
   font-family: 'Helvetica Neue', sans-serif;
+  white-space: nowrap;
 }
 
 /* ---- Date panel ---- */
 .date-panel {
   flex: 1;
-  background: var(--bg-panel);
+  /* Solid surface: the skyline sits behind everything and would otherwise
+     bleed through a translucent panel and hurt legibility. */
+  background: var(--panel-solid);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: 16px;
-  padding: 26px;
+  padding: 22px 20px;
   border: var(--bg-panel-b);
   display: flex;
   flex-direction: column;
   justify-content: center;
   position: relative;
   z-index: 1;
+  min-width: 0;
+  /* Hug the content instead of stretching into a mostly-empty column. */
+  align-self: center;
 }
 
 .solar-date {
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 500;
   color: var(--text-primary);
-  margin-bottom: 14px;
+  margin-bottom: 12px;
+  line-height: 1.35;
 }
 
 .lunar-date {
-  font-size: 16px;
+  font-size: 14px;
   color: var(--text-secondary);
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .current-time {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 500;
   color: var(--text-primary);
   font-family: 'SF Mono', 'Menlo', 'Courier New', monospace;
   letter-spacing: 1px;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ============================
@@ -772,32 +852,189 @@ body[data-sky="dawn"] .win.win-steady {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--marker) transparent;
+  padding-right: 2px;
+  min-height: 0;
 }
 
+.weather-page::-webkit-scrollbar { width: 5px; }
+.weather-page::-webkit-scrollbar-thumb {
+  background: var(--marker);
+  border-radius: 3px;
+}
+
+/* ---- City search ---- */
+.wx-searchbar {
+  position: relative;
+  display: flex;
+  gap: 6px;
+  flex: none;
+}
+
+.wx-input {
+  flex: 1;
+  min-width: 0;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 15px;
+  border: 1px solid var(--bg-card-b);
+  background: var(--card-solid);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.wx-input::placeholder { color: var(--text-tertiary); }
+
+.wx-input:focus {
+  border-color: var(--accent);
+  background: var(--bg-card-hover);
+}
+
+.wx-btn {
+  height: 30px;
+  padding: 0 12px;
+  flex: none;
+  border-radius: 15px;
+  border: 1px solid var(--bg-card-b);
+  background: var(--card-solid);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  font-family: inherit;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+
+.wx-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.wx-btn:active { transform: scale(0.97); }
+
+.wx-btn-icon {
+  width: 30px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wx-btn-icon svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.wx-results {
+  position: absolute;
+  top: 34px;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  background: var(--card-solid);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--bg-card-b);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  max-height: 190px;
+  overflow-y: auto;
+}
+
+.wx-result {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: 9px 13px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.18s ease;
+}
+
+.wx-result + .wx-result { border-top: 1px solid var(--bg-card-b); }
+.wx-result:hover { background: var(--bg-card-hover); }
+
+.wx-result-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wx-result-region {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wx-result-empty {
+  padding: 12px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-align: center;
+}
+
+/* ---- Hero ---- */
 .weather-hero {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px 0 4px 0;
+  padding: 2px 0 0;
+  flex: none;
+}
+
+.weather-place {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.4px;
+  margin-bottom: 6px;
+  text-align: center;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wx-hero-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
 .weather-icon-large {
-  width: 80px;
-  height: 80px;
-  background: var(--bg-panel);
-  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  flex: none;
+  color: var(--accent);
+  opacity: 0.95;
+}
+
+.wx-hero-text {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 38px;
-  border: var(--bg-panel-b);
-  box-shadow: 0 0 30px rgba(108,140,255,0.05);
-  margin-bottom: 14px;
+  flex-direction: column;
 }
 
 .weather-temp-large {
-  font-size: 60px;
+  font-size: 46px;
   font-weight: 200;
   color: var(--text-primary);
   line-height: 1;
@@ -805,60 +1042,224 @@ body[data-sky="dawn"] .win.win-steady {
 }
 
 .weather-desc-large {
-  font-size: 16px;
-  font-weight: 400;
+  font-size: 13px;
+  font-weight: 500;
   color: var(--text-secondary);
-  margin-top: 8px;
+  margin-top: 6px;
+}
+
+.weather-range {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 3px;
 }
 
 .weather-feels {
-  font-size: 13px;
+  font-size: 11px;
   color: var(--text-tertiary);
   margin-top: 6px;
 }
 
 .weather-status {
-  margin-top: 8px;
-  font-size: 12px;
+  margin-top: 6px;
+  font-size: 11px;
   color: var(--text-tertiary);
-  min-height: 16px;
+  min-height: 14px;
+  text-align: center;
 }
 
+/* ---- Hourly strip ---- */
+.wx-hourly {
+  display: flex;
+  gap: 5px;
+  flex: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+
+.wx-hourly::-webkit-scrollbar { display: none; }
+
+.wx-hour {
+  flex: 1 0 auto;
+  min-width: 42px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  background: var(--card-solid);
+  border: 1px solid var(--bg-card-b);
+  border-radius: 11px;
+}
+
+.wx-hour.is-now {
+  border-color: var(--accent);
+  background: var(--bg-card-hover);
+}
+
+.wx-hour-label {
+  font-size: 9.5px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.3px;
+}
+
+.wx-hour.is-now .wx-hour-label { color: var(--accent); }
+
+.wx-hour-icon {
+  width: 22px;
+  height: 22px;
+  color: var(--accent);
+  opacity: 0.9;
+}
+
+.wx-hour-temp {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.wx-hour-pop {
+  font-size: 9px;
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Detail grid ---- */
 .weather-details-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  gap: 8px;
+  flex: none;
 }
 
 .detail-card {
-  background: var(--bg-card);
+  background: var(--card-solid);
   border-radius: 12px;
-  padding: 12px 8px;
+  padding: 10px 6px;
   border: var(--bg-card-b);
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 5px;
+  gap: 4px;
   transition: background 0.25s ease;
+  min-width: 0;
 }
 
-.detail-card:hover {
-  background: var(--bg-card-hover);
-}
+.detail-card:hover { background: var(--bg-card-hover); }
 
 .dc-label {
-  font-size: 11px;
+  font-size: 9.5px;
   color: var(--text-tertiary);
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.5px;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .dc-value {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  /* "5.0 Moderate" must wrap instead of stretching the grid track. */
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+/* ---- 5-day forecast ---- */
+.wx-forecast {
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  border-radius: 12px;
+  overflow: hidden;
+  border: var(--bg-card-b);
+  background: var(--card-solid);
+}
+
+.wx-day {
+  display: grid;
+  grid-template-columns: 54px 22px 34px 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+}
+
+.wx-day + .wx-day { border-top: 1px solid var(--bg-card-b); }
+
+.wx-day-name {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.wx-day-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--accent);
+  opacity: 0.9;
+}
+
+.wx-day-pop {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.wx-day-range {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.wx-day-range b {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.wx-day-range i {
+  font-size: 11px;
+  font-style: normal;
+  color: var(--text-tertiary);
+}
+
+/* ---- Footer ---- */
+.wx-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+  padding-top: 2px;
+}
+
+.wx-updated {
+  flex: 1;
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+.wx-link {
+  border: none;
+  background: transparent;
+  color: var(--text-tertiary);
+  font-size: 10.5px;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.wx-link:hover {
+  color: var(--accent);
+  background: var(--bg-switch);
 }
 
 /* ============================
@@ -881,7 +1282,9 @@ body[data-sky="dawn"] .win.win-steady {
 .world-row {
   display: flex;
   align-items: center;
-  background: var(--bg-card);
+  background: var(--card-solid);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: var(--bg-card-b);
   border-radius: 14px;
   padding: 12px 16px;
@@ -1094,16 +1497,18 @@ body[data-sky="dawn"] .win.win-steady {
 
 /* ============================
    Responsive
-   ============================ */
-@media (max-width: 420px) {
+   ============================
+   The popup is a fixed 560x560 surface, so this breakpoint only fires if a
+   smaller window size is ever configured. Every dial dimension derives from
+   --dial, so shrinking the variable rescales the whole face coherently. */
+@media (max-width: 460px), (max-height: 470px) {
   body {
-    width: 380px;
-    height: 390px;
+    width: 420px;
+    height: 470px;
   }
 
   .clock-container {
-    padding: 16px 18px 18px;
-    border-radius: 0;
+    padding: 14px 16px 16px;
   }
 
   .clock-container::before {
@@ -1112,38 +1517,17 @@ body[data-sky="dawn"] .win.win-steady {
   }
 
   .clock-dial {
-    width: 155px;
-    height: 155px;
+    --dial: 168px;
   }
 
-  .hour-hand  { height: 42px; }
-  .minute-hand { height: 58px; }
-  .second-hand { height: 66px; }
-
-  .hour-marker {
-    top: 11px;
-    height: 8px;
-    transform-origin: 50% calc(77px - 11px);
-  }
-  .hour-marker.major {
-    top: 9px;
-    height: 14px;
-    transform-origin: 50% calc(77px - 9px);
-  }
-
-  .number { font-size: 13px; }
-  .number:nth-child(1) { top: 18px; }
-  .number:nth-child(2) { right: 16px; }
-  .number:nth-child(3) { bottom: 16px; }
-  .number:nth-child(4) { left: 16px; }
-
-  .date-panel { padding: 14px; }
+  .main-content { gap: 14px; }
+  .date-panel { padding: 16px; }
   .solar-date { font-size: 15px; }
-  .lunar-date { font-size: 13px; }
-  .dial-brand { bottom: 38px; font-size: 8px; }
+  .lunar-date { font-size: 12.5px; margin-bottom: 12px; }
+  .current-time { font-size: 19px; }
 
-  .weather-icon-large { width: 56px; height: 56px; font-size: 28px; }
-  .weather-temp-large { font-size: 42px; }
+  .weather-icon-large { width: 46px; height: 46px; }
+  .weather-temp-large { font-size: 34px; letter-spacing: -1px; }
   .weather-details-grid { gap: 6px; }
 
   .world-list { gap: 5px; }

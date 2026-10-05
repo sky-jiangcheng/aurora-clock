@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Aurora Clock",
-  "version": "1.2.1",
-  "description": "A desktop analog clock with multiple dial styles, date display, and live weather from Open-Meteo",
+  "version": "1.3.0",
+  "description": "A desktop analog clock with multiple dial styles, date display, world clock, and live weather from Open-Meteo",
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -21,7 +21,8 @@
     "geolocation"
   ],
   "host_permissions": [
-    "https://api.open-meteo.com/*"
+    "https://api.open-meteo.com/*",
+    "https://geocoding-api.open-meteo.com/*"
   ],
   "commands": {
     "_execute_action": {

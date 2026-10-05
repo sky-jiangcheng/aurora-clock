@@ -4,7 +4,7 @@
 
 一个 Chrome 扩展，提供桌面级表盘时钟，支持多种表盘风格、公历与农历双日期显示，以及实时天气。
 
-当前版本：**1.2.1**
+当前版本：**1.3.0**
 
 ## 界面截图
 
@@ -23,7 +23,7 @@
 - 双日期显示：公历与农历（1900-2049）
 - 12 小时制 / 24 小时制切换
 - 世界时钟，同时显示本地与主要城市时间
-- 基于浏览器定位的 Open-Meteo 实时天气
+- 基于 Open-Meteo 的实时天气：可搜索任意城市，也可使用浏览器定位
 - 键盘快捷键：`Ctrl+Shift+O`（Windows/Linux）或 `Command+Shift+O`（Mac）打开弹窗，`Escape` 关闭
 - 通过 `chrome.commands` 管理自定义快捷键
 - 深色 / 浅色模式切换
@@ -48,9 +48,11 @@
 1. 克隆或下载本项目
 2. 打开 Chrome，进入 `chrome://extensions/`
 3. 打开右上角的「开发者模式」
-4. 点击「加载已解压的扩展程序」
-5. 选择本项目文件夹
+4. 解压发布产物：`unzip -q aurora-clock.zip -d aurora-clock`
+5. 点击「加载已解压的扩展程序」，选择上一步生成的 `aurora-clock/` 文件夹
 6. 安装完成，工具栏会出现时钟图标
+
+注意这里分两步：源码在仓库根目录，`aurora-clock.zip` 才是给 Chrome 解压用的。详见 [docs/development.zh-CN.md](docs/development.zh-CN.md)。
 
 ## 使用说明
 
@@ -84,8 +86,10 @@
 ### 查看天气
 
 - 打开 Weather 标签页
-- 首次使用 Chrome 会请求定位权限，允许后即可加载本地天气
-- 若拒绝定位，则显示上一次缓存的结果
+- 输入城市名搜索，从结果中选取
+- 或点击定位按钮，使用浏览器位置
+- 通过 °C/°F 按钮切换温度单位，通过 Refresh 手动刷新
+- 最近一次成功结果会缓存，在离线、尚未选城市或定位被拒时展示
 
 ### 自定义快捷键
 
@@ -96,9 +100,10 @@
 ## 权限与隐私
 
 - `storage`：保存主题、表盘风格与最近一次天气结果
-- `geolocation`：仅用于请求坐标以获取天气
+- `geolocation`：仅在你点击定位按钮时，用于请求坐标以获取天气
 - Host 权限 `https://api.open-meteo.com/*`：用于天气请求
-- 位置信息仅发送给 Open-Meteo 用于获取天气，不收集其他数据
+- Host 权限 `https://geocoding-api.open-meteo.com/*`：用于城市搜索请求
+- 你提交的坐标或城市名仅发送给 Open-Meteo，不收集其他数据
 
 完整说明：[隐私政策](docs/privacy-policy.zh-CN.md)
 
@@ -115,11 +120,17 @@
 ├── docs/
 │   ├── privacy-policy.md       # 隐私政策（英文）
 │   ├── privacy-policy.zh-CN.md # 隐私政策（简体中文）
+│   ├── development.md          # 打包与部署流程（英文）
+│   ├── development.zh-CN.md    # 打包与部署流程（简体中文）
 │   ├── screenshots/            # 弹窗截图（420x420）
 │   └── store/                  # Chrome 应用商店素材（1280x800）
+├── aurora-clock.zip    # 发布产物，由源码打包而来
+├── aurora-clock/       # zip 的解压副本；已 gitignore，不是源码
 ├── README.md           # 文档（英文）
 └── README.zh-CN.md     # 文档（简体中文）
 ```
+
+仓库根目录是唯一的代码修改位置。`aurora-clock/` 是由 `aurora-clock.zip` 解压生成的部署目标 —— 打包与部署流程见 [docs/development.zh-CN.md](docs/development.zh-CN.md)。
 
 ## 实现说明
 
@@ -138,8 +149,10 @@
 ### 天气
 
 - 调用 Open-Meteo 天气预报 API（无需 API Key）
-- 通过浏览器定位 API 获取坐标
-- 缓存最近一次成功结果，定位不可用时回退使用
+- 通过 Open-Meteo geocoding API 将城市名解析为坐标；仅在你主动要求时使用浏览器定位
+- 打开弹窗时绝不请求定位：权限弹窗会关闭弹窗并中断请求
+- 缓存最近一次成功结果，离线或尚未选城市时回退使用
+- 每个请求均有 8 秒超时保护，避免界面卡死
 
 ### 世界时钟
 

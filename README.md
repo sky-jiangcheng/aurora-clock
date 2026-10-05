@@ -4,7 +4,7 @@ English | [简体中文](README.zh-CN.md)
 
 A Chrome extension that renders a desktop analog clock with multiple dial styles, dual date display, and live weather.
 
-Current version: **1.2.1**
+Current version: **1.3.0**
 
 ## Screenshots
 
@@ -23,7 +23,7 @@ Current version: **1.2.1**
 - Dual date display: Gregorian and Lunar (1900-2049)
 - Switch between 12-hour and 24-hour time formats
 - World clock showing the local time and major cities
-- Live weather from Open-Meteo using the browser location
+- Live weather from Open-Meteo: search any city or use your browser location
 - Keyboard shortcuts: open the popup with `Ctrl+Shift+O` (Windows/Linux) or `Command+Shift+O` (Mac), close it with `Escape`
 - Custom shortcut management through `chrome.commands`
 - Dark / light mode toggle
@@ -48,9 +48,11 @@ Available after publishing.
 1. Clone or download this project
 2. Open Chrome and go to `chrome://extensions/`
 3. Enable "Developer mode" in the upper right corner
-4. Click "Load unpacked"
-5. Select the project folder
+4. Unpack the release artifact: `unzip -q aurora-clock.zip -d aurora-clock`
+5. Click "Load unpacked" and select the generated `aurora-clock/` folder
 6. The extension is installed and shows a clock icon in the toolbar
+
+Note the two-step: the source lives in the repository root, and `aurora-clock.zip` is what you unpack for Chrome. See [docs/development.md](docs/development.md).
 
 ## Usage
 
@@ -84,8 +86,10 @@ Available after publishing.
 ### Check the Weather
 
 - Open the Weather tab
-- On first use, Chrome asks for location permission; allow it to load local weather
-- If location is denied, the last cached result is shown
+- Search for a city by name, then pick it from the results
+- Or click the locate button to use your browser location
+- Use the °C/°F toggle to switch temperature units, and Refresh to update on demand
+- The last successful result is cached and shown while offline, before a city is chosen, or when location is denied
 
 ### Customize the Shortcut
 
@@ -96,9 +100,10 @@ Available after publishing.
 ## Permissions and Privacy
 
 - `storage`: saves theme, dial style, and the last weather result
-- `geolocation`: used only to request your coordinates for weather
-- Host permission `https://api.open-meteo.com/*`: weather requests
-- Location is sent only to Open-Meteo to fetch weather; no other data is collected
+- `geolocation`: used only when you click the locate button, to request your coordinates for weather
+- Host permission `https://api.open-meteo.com/*`: weather forecast requests
+- Host permission `https://geocoding-api.open-meteo.com/*`: city search requests
+- The coordinates or city name you submit are sent only to Open-Meteo; no other data is collected
 
 Full policy: [Privacy Policy](docs/privacy-policy.md)
 
@@ -115,10 +120,17 @@ Full policy: [Privacy Policy](docs/privacy-policy.md)
 ├── docs/
 │   ├── privacy-policy.md       # Privacy policy (English)
 │   ├── privacy-policy.zh-CN.md # Privacy policy (Simplified Chinese)
+│   ├── development.md          # Build and deploy workflow (English)
+│   ├── development.zh-CN.md    # Build and deploy workflow (Simplified Chinese)
 │   ├── screenshots/            # Popup screenshots (420x420)
 │   └── store/                  # Chrome Web Store assets (1280x800)
-└── README.md           # Documentation (English)
+├── aurora-clock.zip    # Release artifact, built from source
+├── aurora-clock/       # Unpacked copy of the zip; gitignored, not source
+├── README.md           # Documentation (English)
+└── README.zh-CN.md     # Documentation (Simplified Chinese)
 ```
+
+The repository root is the only place to edit code. `aurora-clock/` is a deployment target generated from `aurora-clock.zip` — see [docs/development.md](docs/development.md) for the build-and-deploy workflow.
 
 ## Implementation Notes
 
@@ -137,8 +149,10 @@ Full policy: [Privacy Policy](docs/privacy-policy.md)
 ### Weather
 
 - Calls the Open-Meteo forecast API (no API key required)
-- Gets coordinates from the browser geolocation API
-- Caches the last successful result and reuses it when location is unavailable
+- Resolves a city name to coordinates via the Open-Meteo geocoding API, or uses browser geolocation when you ask for it
+- Never requests location on popup open: the permission prompt would close the popup and abort the request
+- Caches the last successful result and reuses it when offline or before a city is chosen
+- Guards every request with an 8-second timeout so the UI never hangs
 
 ### World Clock
 

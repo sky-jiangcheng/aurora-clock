@@ -3,3 +3,7 @@
 
 # Session upload directory
 .uploads/
+
+# Unpacked build directory: a copy of aurora-clock.zip, not source.
+# Only the repo root is the source of truth.
+aurora-clock/
