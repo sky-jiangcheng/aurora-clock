@@ -6,10 +6,13 @@
 并且本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/spec/v2.0.0.html)。
 
 ## [未发布]
+
+## [v1.4.3] - 2026-10-06
 ### 已修复
 - 发布工作流改为校验并上传仓库中已提交的 `aurora-clock.zip`，不再自行重打：
   原重打步骤遗漏了 `background.js`、`offscreen.html`、`offscreen.js`，
-  导致其发布的 v1.4.2 包无法通过商店安装测试。
+  导致其发布的 v1.4.2 包无法安装（商店以 "Not providing promised
+  functionality" 拒审）。本版本不含产品代码变更。
 
 ## [v1.4.2] - 2026-10-06
 ### 更改
