@@ -102,7 +102,8 @@ Aurora Clock 是一个 Chrome 扩展，提供桌面级表盘时钟，支持多�
 ## 权限与隐私
 
 - `storage`：保存主题、表盘风格与最近一次天气结果
-- `geolocation`：仅在你点击定位按钮时，用于请求坐标以获取天气
+- `geolocation`：用于本地天气功能 —— 安装或更新后进行一次后台定位，点击定位按钮时获取一次新的坐标
+- `offscreen`：打开一个短生命周期的隐藏文档（唯一拥有 DOM 的 MV3 上下文）以完成定位读取
 - Host 权限 `https://api.open-meteo.com/*`：用于天气请求
 - Host 权限 `https://geocoding-api.open-meteo.com/*`：用于城市搜索请求
 - 你提交的坐标或城市名仅发送给 Open-Meteo，不收集其他数据
@@ -153,6 +154,7 @@ Aurora Clock 是一个 Chrome 扩展，提供桌面级表盘时钟，支持多�
 - 调用 Open-Meteo 天气预报 API（无需 API Key）
 - 通过 Open-Meteo geocoding API 将城市名解析为坐标；仅在你主动要求时使用浏览器定位
 - 打开弹窗时绝不请求定位：权限弹窗会关闭弹窗并中断请求
+- 安装或更新后不久会通过 offscreen 文档进行一次后台定位，让首次打开弹窗时即可显示当地天气
 - 缓存最近一次成功结果，离线或尚未选城市时回退使用
 - 每个请求均有 8 秒超时保护，避免界面卡死
 

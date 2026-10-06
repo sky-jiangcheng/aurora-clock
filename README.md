@@ -102,7 +102,8 @@ Note the two-step: the source lives in the repository root, and `aurora-clock.zi
 ## Permissions and Privacy
 
 - `storage`: saves theme, dial style, and the last weather result
-- `geolocation`: used only when you click the locate button, to request your coordinates for weather
+- `geolocation`: used for the local weather feature — one background reading shortly after install or update, and a fresh reading when you click the locate button
+- `offscreen`: opens a short-lived hidden document (the only MV3 context with a DOM) to take that location reading
 - Host permission `https://api.open-meteo.com/*`: weather forecast requests
 - Host permission `https://geocoding-api.open-meteo.com/*`: city search requests
 - The coordinates or city name you submit are sent only to Open-Meteo; no other data is collected
@@ -153,6 +154,7 @@ The repository root is the only place to edit code. `aurora-clock/` is a deploym
 - Calls the Open-Meteo forecast API (no API key required)
 - Resolves a city name to coordinates via the Open-Meteo geocoding API, or uses browser geolocation when you ask for it
 - Never requests location on popup open: the permission prompt would close the popup and abort the request
+- Takes one background location reading shortly after install or update (routed through the offscreen document) so the first popup already shows local weather
 - Caches the last successful result and reuses it when offline or before a city is chosen
 - Guards every request with an 8-second timeout so the UI never hangs
 

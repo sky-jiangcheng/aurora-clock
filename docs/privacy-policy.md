@@ -2,14 +2,14 @@
 
 English | [简体中文](privacy-policy.zh-CN.md)
 
-Last updated: October 3, 2026
+Last updated: October 6, 2026
 
 Aurora Clock is a Chrome extension that displays an analog clock, dual date display, a world clock, and local weather. This policy explains what the extension does with your information. The extension has a single purpose — showing time and date information, plus weather for your location — and it uses data only for that purpose.
 
 ## Summary
 
 - The extension collects no personal information.
-- Your location is used only to load local weather, and only after you allow it.
+- Your location is used only to load local weather; you can revoke access at any time in Chrome's settings.
 - Your coordinates are sent to the Open-Meteo weather API. Nothing is sent anywhere else.
 - The developer operates no servers and never receives your data.
 
@@ -17,7 +17,7 @@ Aurora Clock is a Chrome extension that displays an analog clock, dual date disp
 
 ### Location (optional)
 
-When you open the Weather tab, the extension asks the browser for your current coordinates through `navigator.geolocation` at coarse accuracy. If you deny the request, weather is simply not loaded; every other feature keeps working.
+The extension reads your coordinates through `navigator.geolocation` at coarse accuracy in two situations: shortly after it is installed or updated, one background reading is taken so the weather panel is ready the first time you open it; and when you click "Use my location" on the Weather tab, a fresh reading is taken. Opening the Weather tab itself only reads coordinates already cached on your device. If you deny location access, weather is simply not loaded; every other feature keeps working.
 
 Your coordinates are:
 
@@ -61,8 +61,10 @@ Weather data is provided by Open-Meteo under the CC-BY 4.0 licence. Open-Meteo's
 | Permission | Why it is needed |
 | --- | --- |
 | `storage` | Saves your dial style, time format, theme, and the last weather result |
-| `geolocation` | Requests your coordinates so the Weather tab can show local weather |
+| `geolocation` | Reads your coordinates — once shortly after install or update, and when you click "Use my location" — so the Weather tab can show local weather |
+| `offscreen` | Opens a short-lived hidden document, the only extension context that has a DOM, to take a single location reading |
 | `https://api.open-meteo.com/*` | Allows the weather request to Open-Meteo |
+| `https://geocoding-api.open-meteo.com/*` | Allows the city-search request to Open-Meteo |
 
 ## Data retention and your choices
 

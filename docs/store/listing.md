@@ -52,7 +52,7 @@ KEYBOARD FIRST
 Open the popup with Ctrl+Shift+O (Command+Shift+O on Mac) and close it with Escape. You can rebind the shortcut from the extension's options page; press Escape while recording to cancel.
 
 PRIVATE BY DESIGN
-Aurora Clock has no analytics, no tracking, no ads, and no server of its own. Your dial style, theme, and time format live in Chrome's synced storage. Your location is requested only when you open the Weather tab, is sent only to Open-Meteo to look up the local forecast, and is cached on your own device. Decline the prompt and everything else keeps working.
+Aurora Clock has no analytics, no tracking, no ads, and no server of its own. Your dial style, theme, and time format live in Chrome's synced storage. Your location is used for one thing only: the local forecast. One background location reading is taken shortly after install or update so the weather panel is ready the first time you open it; after that, your location is read only when you click "Use my location" on the Weather tab. Coordinates are sent only to Open-Meteo and are cached on your own device. Revoke location access and everything else keeps working.
 
 WHO IT IS FOR
 Anyone who wants the time at a glance without giving up a tab: a quiet, good-looking clock that is always one keystroke away.
@@ -75,7 +75,13 @@ Saves the user's dial style, theme (dark or light), and 12/24-hour preference so
 ### `geolocation`
 
 ```
-Used only on the Weather tab, to obtain the user's coordinates so the local forecast can be requested from Open-Meteo. The coordinates are sent only to Open-Meteo, are never stored on a server, and are not used for any other purpose. If the user declines the prompt, every other feature continues to work.
+Used solely for the local weather feature. When the user clicks "Use my location" on the Weather tab, the extension obtains fresh coordinates through an offscreen document — so the permission prompt never closes the popup — and sends them only to api.open-meteo.com to fetch the local forecast. Shortly after install or update, one background reading is taken the same way to pre-fill the weather panel; opening the Weather tab itself only reads coordinates already cached on the device. Coordinates are stored only in the extension's local storage on the user's device, are never sold, shared, or used for any other purpose, and every feature except the Weather tab works without location.
+```
+
+### `offscreen`
+
+```
+The offscreen document is the only Manifest V3 context that has a DOM and therefore navigator.geolocation. It is created briefly to take a single location reading for the local weather feature, then closed immediately. It renders no visible UI, plays no audio, and contacts no servers.
 ```
 
 ### Host permission `https://api.open-meteo.com/*`
@@ -92,7 +98,7 @@ Aurora Clock does not use remote code. All HTML, CSS, and JavaScript is included
 
 ## Data usage answers
 
-- Data collected: **Location**, and only when the user opens the Weather tab.
+- Data collected: **Location** — one background reading shortly after install or update to pre-fill the weather panel, and fresh readings when the user clicks "Use my location" on the Weather tab.
 - Purpose: providing the extension's single purpose (local weather).
 - Sold to third parties: **No**
 - Used or transferred for purposes unrelated to the single purpose: **No**
