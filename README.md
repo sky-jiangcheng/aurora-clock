@@ -6,6 +6,8 @@ A Chrome extension that renders a desktop analog clock with multiple dial styles
 
 Current version: **1.4.1**
 
+See [CHANGELOG](CHANGELOG.md) for details.
+
 ## Screenshots
 
 | Classic | Neon | Ocean |

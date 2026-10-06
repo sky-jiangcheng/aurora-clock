@@ -6,6 +6,8 @@
 
 当前版本：**1.4.1**
 
+详见 [CHANGELOG](CHANGELOG.zh-CN.md)。
+
 ## 界面截图
 
 | 经典 | 霓虹 | 海洋 |
