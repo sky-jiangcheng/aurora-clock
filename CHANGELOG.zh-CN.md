@@ -6,13 +6,19 @@
 并且本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/spec/v2.0.0.html)。
 
 ## [未发布]
+
+## [v1.4.2] - 2026-10-06
 ### 更改
 - 品牌名统一规范为 "Aurora Clock"，覆盖 manifest、界面与全部文档
   （原为 "auroraClock"）。仓库名与文件名（`aurora-clock`）保持不变。
+- 隐私披露如实描述定位流程：安装或更新后进行一次后台定位读取、点击
+  「使用我的位置」时获取新坐标、打开 Weather 标签页仅读取本地缓存。
+  权限表同时补上 `offscreen` 与 geocoding host 权限。
 
 ### 已修复
 - 开发指南：重打包命令改为在仓库根目录执行。原命令（`cd aurora-clock && zip ...`）
   会用旧的部署副本打 zip，导致根目录的修改进不了包。
+- 商店文案：补上必需的 `offscreen` 权限声明，并修正 `geolocation` 声明。
 
 ## [v1.4.1] - 2026-10-06
 ### 已修复
