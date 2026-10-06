@@ -6,6 +6,13 @@
 并且本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/spec/v2.0.0.html)。
 
 ## [未发布]
+### 更改
+- 品牌名统一规范为 "Aurora Clock"，覆盖 manifest、界面与全部文档
+  （原为 "auroraClock"）。仓库名与文件名（`aurora-clock`）保持不变。
+
+### 已修复
+- 开发指南：重打包命令改为在仓库根目录执行。原命令（`cd aurora-clock && zip ...`）
+  会用旧的部署副本打 zip，导致根目录的修改进不了包。
 
 ## [v1.4.1] - 2026-10-06
 ### 已修复

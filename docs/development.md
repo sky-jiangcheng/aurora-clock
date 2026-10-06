@@ -23,13 +23,13 @@ Everything else is derived:
 3. Repack:
 
    ```bash
-   cd aurora-clock && zip -r -X ../aurora-clock.zip \
+   zip -r -X aurora-clock.zip \
      manifest.json popup.html popup.js styles.css options.html options.js \
      background.js offscreen.html offscreen.js LICENSE icons/ \
      -x "*.DS_Store"
    ```
 
-   Run this from **inside** `aurora-clock/`. The archive must contain files at its root, not nested in an `aurora-clock/` folder — Chrome rejects a zip with the wrong layout.
+   Run this from the **repository root**. The archive must contain files at its root, not nested in an `aurora-clock/` folder — Chrome rejects a zip with the wrong layout.
 
 4. Refresh the unpacked copy that Chrome actually loads:
 
@@ -37,7 +37,7 @@ Everything else is derived:
    rm -rf aurora-clock && unzip -q aurora-clock.zip -d aurora-clock
    ```
 
-5. Reload the extension at `chrome://extensions` (**Developer mode** on → hit **Reload** on auroraClock). The path stays the same, so do not re-select the folder.
+5. Reload the extension at `chrome://extensions` (**Developer mode** on → hit **Reload** on Aurora Clock). The path stays the same, so do not re-select the folder.
 
 6. Verify: `manifest.json` shows the new version, the popup opens, and the tabs render.
 

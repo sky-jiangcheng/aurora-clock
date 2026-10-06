@@ -1,8 +1,8 @@
-# aurora-clock
+# Aurora Clock
 
 English | [简体中文](README.zh-CN.md)
 
-A Chrome extension that renders a desktop analog clock with multiple dial styles, dual date display, and live weather.
+Aurora Clock is a Chrome extension that renders a desktop analog clock with multiple dial styles, dual date display, and live weather.
 
 Current version: **1.4.1**
 

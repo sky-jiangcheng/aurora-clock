@@ -1,10 +1,10 @@
-# auroraClock — Privacy Policy
+# Aurora Clock — Privacy Policy
 
 English | [简体中文](privacy-policy.zh-CN.md)
 
 Last updated: October 3, 2026
 
-auroraClock is a Chrome extension that displays an analog clock, dual date display, a world clock, and local weather. This policy explains what the extension does with your information. The extension has a single purpose — showing time and date information, plus weather for your location — and it uses data only for that purpose.
+Aurora Clock is a Chrome extension that displays an analog clock, dual date display, a world clock, and local weather. This policy explains what the extension does with your information. The extension has a single purpose — showing time and date information, plus weather for your location — and it uses data only for that purpose.
 
 ## Summary
 

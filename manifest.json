@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "auroraClock",
+  "name": "Aurora Clock",
   "version": "1.4.1",
   "description": "A desktop analog clock with multiple dial styles, date display, world clock, and live weather from Open-Meteo",
   "action": {
@@ -34,7 +34,7 @@
         "default": "Ctrl+Shift+O",
         "mac": "Command+Shift+O"
       },
-      "description": "Open auroraClock"
+      "description": "Open Aurora Clock"
     }
   },
   "icons": {

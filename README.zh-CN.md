@@ -1,8 +1,8 @@
-# aurora-clock
+# Aurora Clock
 
 [English](README.md) | 简体中文
 
-一个 Chrome 扩展，提供桌面级表盘时钟，支持多种表盘风格、公历与农历双日期显示，以及实时天气。
+Aurora Clock 是一个 Chrome 扩展，提供桌面级表盘时钟，支持多种表盘风格、公历与农历双日期显示，以及实时天气。
 
 当前版本：**1.4.1**
 

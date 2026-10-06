@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Brand name normalized to "Aurora Clock" across the manifest, UI, and all
+  documentation (previously "auroraClock"). Repository and file names
+  (`aurora-clock`) are unchanged.
+
+### Fixed
+- Development guide: the repack command now runs from the repository root.
+  The previous instruction (`cd aurora-clock && zip ...`) rebuilt the zip from
+  the stale deployed copy, so edits made in the root never reached the package.
 
 ## [v1.4.1] - 2026-10-06
 ### Fixed

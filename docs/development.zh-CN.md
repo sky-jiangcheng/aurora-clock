@@ -23,13 +23,13 @@
 3. 重新打包：
 
    ```bash
-   cd aurora-clock && zip -r -X ../aurora-clock.zip \
+   zip -r -X aurora-clock.zip \
      manifest.json popup.html popup.js styles.css options.html options.js \
      background.js offscreen.html offscreen.js LICENSE icons/ \
      -x "*.DS_Store"
    ```
 
-   这条命令要在 `aurora-clock/` **目录内**执行。压缩包内的文件必须位于根层级，不能再套一层 `aurora-clock/` 文件夹 —— Chrome 会拒绝这种结构。
+   这条命令在**仓库根目录**执行。压缩包内的文件必须位于根层级，不能再套一层 `aurora-clock/` 文件夹 —— Chrome 会拒绝这种结构。
 
 4. 刷新 Chrome 实际加载的那份解压副本：
 
@@ -37,7 +37,7 @@
    rm -rf aurora-clock && unzip -q aurora-clock.zip -d aurora-clock
    ```
 
-5. 打开 `chrome://extensions`（**开发者模式**开启 → 对 auroraClock 点「重新加载」）。路径没变，不必重新选目录。
+5. 打开 `chrome://extensions`（**开发者模式**开启 → 对 Aurora Clock 点「重新加载」）。路径没变，不必重新选目录。
 
 6. 验证：`manifest.json` 显示新版本号、弹窗能打开、各标签页正常渲染。
 
