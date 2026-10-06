@@ -37,7 +37,7 @@ Everything else is derived:
    rm -rf aurora-clock && unzip -q aurora-clock.zip -d aurora-clock
    ```
 
-5. Reload the extension at `chrome://extensions` (**Developer mode** on → hit **Reload** on Aurora Clock). The path stays the same, so do not re-select the folder.
+5. Reload the extension at `chrome://extensions` (**Developer mode** on → hit **Reload** on auroraClock). The path stays the same, so do not re-select the folder.
 
 6. Verify: `manifest.json` shows the new version, the popup opens, and the tabs render.
 

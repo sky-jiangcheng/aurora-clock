@@ -12,7 +12,7 @@
 ## 二、通过网页创建（推荐）
 1. 打开 https://github.com/sky-jiangcheng/aurora-clock/releases/new
 2. 选择 Tag version：`v1.4.1`
-   - Release title 建议填：`Aurora Clock v1.4.1`
+   - Release title 建议填：`auroraClock v1.4.1`
    - 描述可以直接复制 `CHANGELOG.md` 中对应片段
 3. 在 “Attach binaries by dragging & dropping” 框里，把本地的 `aurora-clock.zip` 拖进去
    （该文件即仓库根目录下已提交的 `aurora-clock.zip`，与 tag 内容完全一致）
@@ -29,7 +29,7 @@ git checkout v1.4.1
 
 # 2. 创建 release并上传已有的 zip（避免重复构建）
 gh release create v1.4.1 aurora-clock.zip \
-  --title "Aurora Clock v1.4.1" \
+  --title "auroraClock v1.4.1" \
   --notes "$(sed -n '/^## \[v1.4.1\]/,/^## \[/p' CHANGELOG.md | sed '$d')"
 ```
 

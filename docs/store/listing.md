@@ -1,6 +1,6 @@
 # Chrome Web Store listing copy
 
-Ready-to-paste English copy for the Chrome Web Store submission of **Aurora Clock**.
+Ready-to-paste English copy for the Chrome Web Store submission of **auroraClock**.
 Everything the API cannot set — the listing text, permission justifications, and data
 usage answers — is collected here so a resubmission can be filled in from one source.
 
@@ -9,7 +9,7 @@ usage answers — is collected here so a resubmission can be filled in from one 
 Filled from the package (`manifest.json` → `name`):
 
 ```
-Aurora Clock
+auroraClock
 ```
 
 ## Summary (max 132 characters)
@@ -25,7 +25,7 @@ Recommended: **Productivity**. Alternative: **News & Weather**.
 ## Detailed description
 
 ```
-Aurora Clock puts a finely crafted analog clock in your browser toolbar — one click, and it is right there.
+auroraClock puts a finely crafted analog clock in your browser toolbar — one click, and it is right there.
 
 SIX DIAL STYLES
 Choose from Classic, Modern, Minimalist, Vintage, Neon, and Ocean. Switch instantly from the dots in the header; your choice is remembered for next time.
@@ -52,7 +52,7 @@ KEYBOARD FIRST
 Open the popup with Ctrl+Shift+O (Command+Shift+O on Mac) and close it with Escape. You can rebind the shortcut from the extension's options page; press Escape while recording to cancel.
 
 PRIVATE BY DESIGN
-Aurora Clock has no analytics, no tracking, no ads, and no server of its own. Your dial style, theme, and time format live in Chrome's synced storage. Your location is requested only when you open the Weather tab, is sent only to Open-Meteo to look up the local forecast, and is cached on your own device. Decline the prompt and everything else keeps working.
+auroraClock has no analytics, no tracking, no ads, and no server of its own. Your dial style, theme, and time format live in Chrome's synced storage. Your location is requested only when you open the Weather tab, is sent only to Open-Meteo to look up the local forecast, and is cached on your own device. Decline the prompt and everything else keeps working.
 
 WHO IT IS FOR
 Anyone who wants the time at a glance without giving up a tab: a quiet, good-looking clock that is always one keystroke away.
@@ -61,7 +61,7 @@ Anyone who wants the time at a glance without giving up a tab: a quiet, good-loo
 ## Single purpose
 
 ```
-Aurora Clock provides an at-a-glance time reference: an analog clock with Gregorian and lunar dates, a world clock, and the local weather.
+auroraClock provides an at-a-glance time reference: an analog clock with Gregorian and lunar dates, a world clock, and the local weather.
 ```
 
 ## Permission justifications
@@ -87,7 +87,7 @@ Required to request the weather forecast from Open-Meteo, the only external serv
 ## Remote code
 
 ```
-Aurora Clock does not use remote code. All HTML, CSS, and JavaScript is included in the package; nothing is fetched or evaluated at runtime. The only network request is the weather lookup described above.
+auroraClock does not use remote code. All HTML, CSS, and JavaScript is included in the package; nothing is fetched or evaluated at runtime. The only network request is the weather lookup described above.
 ```
 
 ## Data usage answers

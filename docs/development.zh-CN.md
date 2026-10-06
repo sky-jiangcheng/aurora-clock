@@ -37,7 +37,7 @@
    rm -rf aurora-clock && unzip -q aurora-clock.zip -d aurora-clock
    ```
 
-5. 打开 `chrome://extensions`（**开发者模式**开启 → 对 Aurora Clock 点「重新加载」）。路径没变，不必重新选目录。
+5. 打开 `chrome://extensions`（**开发者模式**开启 → 对 auroraClock 点「重新加载」）。路径没变，不必重新选目录。
 
 6. 验证：`manifest.json` 显示新版本号、弹窗能打开、各标签页正常渲染。
 
