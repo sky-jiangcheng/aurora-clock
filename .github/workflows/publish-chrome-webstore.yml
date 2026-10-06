@@ -8,7 +8,7 @@ on:
 
 jobs:
   publish:
-    name: Build and publish
+    name: Verify and publish the committed package
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,13 +26,26 @@ jobs:
           fi
           echo "manifest version $pkg matches tag $GITHUB_REF_NAME"
 
-      - name: Build extension package
+      # The zip is built and verified locally (see docs/development.md) and
+      # committed. Rebuilding it here previously dropped background.js and the
+      # offscreen files, publishing a package that could not install.
+      - name: Verify the committed package matches the source
         run: |
           set -euo pipefail
-          rm -f aurora-clock.zip
-          zip -rq aurora-clock.zip \
-            manifest.json popup.html popup.js options.html options.js styles.css icons LICENSE
-          unzip -l aurora-clock.zip
+          test -f aurora-clock.zip || { echo "::error::aurora-clock.zip is not committed"; exit 1; }
+          files="manifest.json popup.html popup.js styles.css options.html options.js background.js offscreen.html offscreen.js LICENSE"
+          for f in $files; do
+            test -f "$f" || { echo "::error::$f is missing from the repository"; exit 1; }
+            unzip -p aurora-clock.zip "$f" > /tmp/zip-entry 2>/dev/null \
+              || { echo "::error::$f is missing from aurora-clock.zip"; exit 1; }
+            cmp -s "$f" /tmp/zip-entry \
+              || { echo "::error::$f in aurora-clock.zip differs from the repository"; exit 1; }
+          done
+          for f in $(jq -r '[.icons[], .action.default_icon[]] | unique | .[]' manifest.json); do
+            unzip -l aurora-clock.zip "$f" | grep -q "$f" \
+              || { echo "::error::$f is missing from aurora-clock.zip"; exit 1; }
+          done
+          echo "aurora-clock.zip matches the source"
 
       - name: Upload and publish to Chrome Web Store
         uses: mnao305/chrome-extension-upload@v7.0.0
