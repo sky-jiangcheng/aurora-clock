@@ -8,7 +8,7 @@
 </head>
 <body>
   <!-- Weather icon sprite: themed via currentColor, no emoji font dependency -->
-  <svg width="0" height="0" aria-hidden="true" focusable="false">
+  <svg style="display:none" width="0" height="0" aria-hidden="true" focusable="false">
     <defs>
       <symbol id="wx-sun" viewBox="0 0 64 64">
         <circle cx="32" cy="32" r="13" fill="currentColor"/>
@@ -83,6 +83,15 @@
       </div>
       <div class="sky-clouds" id="skyClouds"></div>
       <div class="sky-city" id="skyCity"></div>
+      <!-- Daytime landscape: layered mountain silhouettes over still water,
+           the daylight counterpart to the night skyline. Same flat-cut
+           aesthetic, mutually exclusive with the city by data-sky. -->
+      <div class="sky-water" aria-hidden="true"><div class="water-shine"></div></div>
+      <div class="sky-mountains" aria-hidden="true">
+        <div class="mtn mtn-far"></div>
+        <div class="mtn mtn-mid"></div>
+        <div class="mtn mtn-near"></div>
+      </div>
     </div>
     <div class="content-scrim" aria-hidden="true"></div>
 

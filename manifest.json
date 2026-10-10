@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Aurora Clock",
-  "version": "1.4.3",
+  "version": "1.5.0",
   "description": "A desktop analog clock with multiple dial styles, date display, world clock, and live weather from Open-Meteo",
   "action": {
     "default_popup": "popup.html",

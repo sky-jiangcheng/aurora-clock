@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.5.0] - 2026-10-10
+### Added
+- **Daytime landscape background.** During the day and dawn the skyline is
+  replaced by a flat-cut mountain scene — three receding ridges (far / mid /
+  near) over still water with a single specular streak, plus a lit ridge line
+  on the tallest peak. It shares the night skyline's silhouette aesthetic and
+  cross-fades with it by time of day: landscape owns `day`/`dawn`, the city
+  skyline owns `dusk`/`night`.
+
+### Changed
+- **Daypart-aware materials.** The classic dial is no longer a fixed dark
+  surface. Its face, bezel ring, hands, numerals and glass sheen now relight
+  with the sky: porcelain-white with slate hands at noon, warm rose at dawn,
+  violet-amber at dusk, deep obsidian at night. Hands read as turned metal via
+  a cylindrical highlight; the seconds hand gains a lollipop counterweight; the
+  centre cap becomes a domed pivot.
+- **Airy daylight UI.** Day and dawn use a barely-there scrim and frosted
+  pale panels (instead of the dark glass), so the bright landscape and the date
+  panel stay legible without the previous grey cast.
+- Fixed a thin dark bar above the popup: the zero-size weather icon sprite is
+  now `display:none`, removing the inline line box that pushed the container
+  down and exposed the body background.
+
 ## [v1.4.3] - 2026-10-06
 ### Fixed
 - Publish workflow verifies and uploads the committed `aurora-clock.zip`
